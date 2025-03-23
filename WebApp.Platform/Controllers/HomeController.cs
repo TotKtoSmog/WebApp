@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Immutable;
 using System.Diagnostics;
+using WebApp.API.Models;
+using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 
 namespace WebApp.Platform.Controllers
@@ -7,15 +10,18 @@ namespace WebApp.Platform.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly CityHttpClient _cityHttpClient;
+        public HomeController(ILogger<HomeController> logger, CityHttpClient cityHttpClient)
         {
             _logger = logger;
+            _cityHttpClient = cityHttpClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _cityHttpClient.GetAllAsync();
+            List<City> cities = result.ToList();
+            return View(cities);
         }
 
         public IActionResult Privacy()

@@ -1,3 +1,5 @@
+using WebApp.Platform.ClientAPI;
+
 namespace WebApp.Platform
 {
     public class Program
@@ -8,7 +10,8 @@ namespace WebApp.Platform
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient<CityHttpClient>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
