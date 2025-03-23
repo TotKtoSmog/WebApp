@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.API.Context;
+using WebApp.API.Repositories;
+using WebApp.API.Repositories.Interface;
 
 namespace WebApp.API
 {
@@ -15,6 +17,7 @@ namespace WebApp.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
 
             var app = builder.Build();
@@ -28,7 +31,6 @@ namespace WebApp.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
