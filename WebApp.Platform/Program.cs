@@ -18,6 +18,7 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient<CityViewHttpClient>();
 
             builder.Services.AddScoped<IHomeService, HomeService>();
+            builder.Services.AddScoped<ICityService, CityService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
