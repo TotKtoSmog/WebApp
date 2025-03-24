@@ -18,14 +18,22 @@ namespace WebApp.API.Controllers
             _logger = logger;
             _viewRepository = viewRepository;
         }
+
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<City>>> GetAllAsync() 
             => Ok(await _repository.GetAllAsync());
+
         [HttpGet("GetVisibleCity")]
         public async Task<ActionResult<IEnumerable<City>>> GetVisibleCityAsync() 
             => Ok(await _repository.GetVisibleCityAsync());
+
         [HttpGet("GetCityInHomePage")]
         public async Task<ActionResult<IEnumerable<City>>> GetCityInHomePageAsync()
             => Ok(await _viewRepository.GetAllAsync());
+
+        [HttpGet("GetCityByPageName")]
+        public async Task<ActionResult<City?>> GetCityByPageNameAsync(string pageName)
+            => Ok(await _repository.GetCityByPageNameAsync(pageName));
+
     }
 }
