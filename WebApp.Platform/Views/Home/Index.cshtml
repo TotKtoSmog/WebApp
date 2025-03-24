@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Домашняя страница";
 }
-@model IEnumerable<WebApp.API.Models.City>
+@model IEnumerable<WebApp.API.Models.CityInHomePage>
 <div class="top-content">
     <h1 class="kiwi-maru-regular text-center">Что делаем, куда  идем</h1>
     <img src="https://i.imgur.com/m7MQQu3.png" atl="Памятник Петру Первому" class="MainPicture" />
@@ -17,7 +17,7 @@
     {
         <div class="item">
             <a href="#">
-                <img src="@city.PictureAtHomeLink" alt="@city.Title">
+                <img src="@city.PictureLink" alt="@city.Title">
                 <div class="centered">@city.Title</div>
             </a>
         </div>

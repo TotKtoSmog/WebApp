@@ -1,4 +1,6 @@
 using WebApp.Platform.ClientAPI;
+using WebApp.Platform.Services;
+using WebApp.Platform.Services.Interfaces;
 
 namespace WebApp.Platform
 {
@@ -10,8 +12,12 @@ namespace WebApp.Platform
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
             builder.Services.AddHttpClient();
             builder.Services.AddHttpClient<CityHttpClient>();
+            builder.Services.AddHttpClient<CityViewHttpClient>();
+
+            builder.Services.AddScoped<IHomeService, HomeService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

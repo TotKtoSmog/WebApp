@@ -1,34 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using WebApp.API.Models;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
+using WebApp.Platform.Services.Interfaces;
 
 namespace WebApp.Platform.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CityHttpClient _cityHttpClient;
-        public HomeController(ILogger<HomeController> logger, CityHttpClient cityHttpClient)
+        private readonly IHomeService _homeService;
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
             _logger = logger;
-            _cityHttpClient = cityHttpClient;
+            _homeService = homeService;
         }
-
         public async Task<IActionResult> Index()
-        {
-            var result = await _cityHttpClient.GetAllAsync();
-            List<City> cities = result.ToList();
-            return View(cities);
-        }
-
+            => View(await _homeService.GetAllCityAsync());
         public IActionResult Privacy()
         {
             return View();
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
