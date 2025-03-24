@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.API.Context;
+using WebApp.API.Contexts;
 using WebApp.API.Repositories;
 using WebApp.API.Repositories.Interface;
 
@@ -18,8 +19,10 @@ namespace WebApp.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<ICityRepository, CityRepository>();
-            builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
+            builder.Services.AddScoped<ICityInHomePageViewRepository, CityInHomePageViewRepository>();
 
+            builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
+            builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
