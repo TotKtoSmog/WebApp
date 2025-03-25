@@ -16,6 +16,7 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient();
             builder.Services.AddHttpClient<CityHttpClient>();
             builder.Services.AddHttpClient<CityViewHttpClient>();
+            builder.Services.AddHttpClient<LocationViewHttpClient>();
 
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<ICityService, CityService>();
