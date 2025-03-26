@@ -24,7 +24,7 @@
     @foreach (var location in Model.Locations)
     {
         <div class="item">
-            <a href="#">
+            <a asp-controller="Location" asp-action="index" asp-route-pageName="@location.PageName">
                 <img src="@location.PictureLink" alt="@location.Title">
                 <div class="centered">@location.Title</div>
                 <span class="bottom-right badge bg-success rounded-pill">@location.Rating</span>
