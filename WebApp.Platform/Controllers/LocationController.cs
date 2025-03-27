@@ -19,12 +19,12 @@ namespace WebApp.Platform.Controllers
         }
         public async Task<IActionResult> Index(string pageName)
         {
-            LocationInHomePage location = await _locationService.GetLocationInHomePageByPageNameAsync(pageName);
+            AllLocationInformation locationInformation = await _locationService.GetAllLocationInformationAsync(pageName);
             
-            if(location == null) 
+            if(locationInformation == null) 
                 return NotFound();
 
-            return View(location);
+            return View(locationInformation);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
