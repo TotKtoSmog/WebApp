@@ -23,12 +23,14 @@ namespace WebApp.API
             builder.Services.AddScoped<ILocationInCityViewRepository, LocationInCityViewRepository>();
             builder.Services.AddScoped<ILocationInHomePageViewRepository, LocationInHomePageViewRepository>();
             builder.Services.AddScoped<ILocationGalleryRepository, LocationGalleryRepository>();
+            builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
             builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<LocationInCityContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<LocationInHomePageContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<LocationGalleryContext>(o => o.UseNpgsql(connectionString));
+            builder.Services.AddDbContextFactory<FeedbackContext>(o => o.UseNpgsql(connectionString));
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
