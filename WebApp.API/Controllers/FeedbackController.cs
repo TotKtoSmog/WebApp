@@ -10,12 +10,15 @@ namespace WebApp.API.Controllers
     public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackRepository _feedbackRepository;
+        private readonly IFeedbackViewRepository _feedbackViewRepository;
         private readonly ILogger<FeedbackController> _logger;
         public FeedbackController(IFeedbackRepository feedbackRepository, 
-            ILogger<FeedbackController> logger)
+            ILogger<FeedbackController> logger,
+            IFeedbackViewRepository feedbackViewRepository)
         {
             _feedbackRepository = feedbackRepository;
             _logger = logger;
+            _feedbackViewRepository = feedbackViewRepository;
         }
 
         [HttpPost("Create")]
@@ -25,5 +28,9 @@ namespace WebApp.API.Controllers
             Feedback newfeedback = await _feedbackRepository.CreateAsync(feedback);
             return CreatedAtAction(nameof(Create), feedback);
         }
+
+        [HttpGet("GetFeedbackByIdLocation")]
+        public async Task<ActionResult<IEnumerable<FeedbackView>>> GetFeedbackByIdLocationAsync(int idLocation)
+            => Ok(await _feedbackViewRepository.GetFeedbackByIdLocationAsync(idLocation));
     }
 }
