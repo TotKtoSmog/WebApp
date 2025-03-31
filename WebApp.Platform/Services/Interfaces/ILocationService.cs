@@ -9,5 +9,6 @@ namespace WebApp.Platform.Services.Interfaces
         public Task<List<LocationGallery>> GetLocationGalleryByIdLocationAsync(int idLocation);
         public Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation);
         public Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName);
+        public Task<Feedback> CreateFeedbackAsync(Feedback feedback);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebApp.API.Models;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 
@@ -15,6 +16,7 @@ namespace WebApp.Platform.Controllers
             _logger = logger;
             _locationService = cityService;
         }
+        [HttpGet]
         public async Task<IActionResult> Index(string pageName)
         {
             AllLocationInformation locationInformation = await _locationService.GetAllLocationInformationAsync(pageName);
@@ -23,6 +25,15 @@ namespace WebApp.Platform.Controllers
                 return NotFound();
 
             return View(locationInformation);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddReview(string pageName, Feedback model)
+        {
+            model.SenderIpAddress = "127.0.0.1";
+            model.DateTime = DateTime.UtcNow;
+            Feedback feedback = await _locationService.CreateFeedbackAsync(model);
+            return RedirectToAction("Index", new { pageName });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
