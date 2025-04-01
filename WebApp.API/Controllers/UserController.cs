@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.API.Models;
-using WebApp.API.Repositories;
 using WebApp.API.Repositories.Interface;
 
 namespace WebApp.API.Controllers

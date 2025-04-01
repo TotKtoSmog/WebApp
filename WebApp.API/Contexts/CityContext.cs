@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApp.API.Models;
 
-namespace WebApp.API.Context
+namespace WebApp.API.Contexts
 {
     public class CityContext : DbContext
     {
