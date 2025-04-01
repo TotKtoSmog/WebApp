@@ -10,11 +10,14 @@ namespace WebApp.Platform.Controllers
     {
         private readonly ILogger<LocationController> _logger;
         private readonly ILocationService _locationService;
+        private readonly IClientIpService _clientIpService;
 
-        public LocationController(ILogger<LocationController> logger, ILocationService cityService)
+        public LocationController(ILogger<LocationController> logger, ILocationService cityService, 
+            IClientIpService clientIpService)
         {
             _logger = logger;
             _locationService = cityService;
+            _clientIpService = clientIpService;
         }
         [HttpGet]
         public async Task<IActionResult> Index(string pageName)
@@ -30,9 +33,10 @@ namespace WebApp.Platform.Controllers
         [HttpPost]
         public async Task<IActionResult> AddReview(string pageName, Feedback model)
         {
-            model.SenderIpAddress = "127.0.0.1";
+            model.SenderIpAddress = _clientIpService.GetClientIp();
             model.DateTime = DateTime.UtcNow;
-            Feedback feedback = await _locationService.CreateFeedbackAsync(model);
+
+            await _locationService.CreateFeedbackAsync(model);
             return RedirectToAction("Index", new { pageName });
         }
 

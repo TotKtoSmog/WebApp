@@ -12,6 +12,7 @@ namespace WebApp.Platform
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHttpClient();
             builder.Services.AddHttpClient<CityHttpClient>();
@@ -24,6 +25,8 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
+            builder.Services.AddScoped<IClientIpService, ClientIpService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
