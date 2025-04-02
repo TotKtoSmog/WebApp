@@ -1,0 +1,37 @@
+﻿using WebApp.API.Models;
+using WebApp.Platform.ClientAPI;
+using WebApp.Platform.Models;
+using WebApp.Platform.Services.Interfaces;
+
+namespace WebApp.Platform.Services
+{
+    public class UserService : IUserService
+    {
+        private readonly UserHttpClient _userHttpClient;
+        private readonly IClientIpService _clientIpService;
+        public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService)
+        {
+            _userHttpClient = userHttpClient;
+            _clientIpService = clientIpService;
+        }
+        public async Task<bool> CreateUserAsync(UserRegistration userRegistration)
+        {
+            if(userRegistration.Email == "" || userRegistration.Password != userRegistration.RepeatPassword)
+                return false;
+            var newUser = new User
+            {
+                FirstName = userRegistration.FirstName,
+                LastName = userRegistration.LastName,
+                Email = userRegistration.Email,
+                Age = userRegistration.Age,
+                PasswordHash = userRegistration.Password,
+                RegistrationIp = _clientIpService.GetClientIp(),
+                LastIp = _clientIpService.GetClientIp()
+            };
+            var result = await _userHttpClient.CreateUserAsync(newUser);
+            if (result == null) 
+                return false;
+            return true;
+        }   
+    }
+}

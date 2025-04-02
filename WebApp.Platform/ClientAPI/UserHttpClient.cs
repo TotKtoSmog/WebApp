@@ -2,29 +2,28 @@
 
 namespace WebApp.Platform.ClientAPI
 {
-    public class FeedbackHttpClient
+    public class UserHttpClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<FeedbackHttpClient> _logger;
+        private readonly ILogger<UserHttpClient> _logger;
         private readonly string BaseUrl = "https://localhost:7119/api";
-        public FeedbackHttpClient(HttpClient httpClient,
-            ILogger<FeedbackHttpClient> logger)
+        public UserHttpClient(HttpClient httpClient, ILogger<UserHttpClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
         }
-        public async Task<API.Models.Feedback> CreateFeedbackAsync(API.Models.Feedback feedback)
+        public async Task<API.Models.User> CreateUserAsync(API.Models.User user)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/Feedback/Create", feedback);
+                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/User/Create", user);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при создании отзыва: {response.StatusCode} - {responseContent}");
+                    throw new HttpRequestException($"Ошибка при создании пользователя: {response.StatusCode} - {responseContent}");
                 }
-                return JsonSerializer.Deserialize<API.Models.Feedback>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+                return JsonSerializer.Deserialize<API.Models.User>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
             }
             catch (Exception ex)
             {

@@ -21,11 +21,13 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient<LocationGalleryHttpClient>();
             builder.Services.AddHttpClient<FeedbackViewHttpClient>();
             builder.Services.AddHttpClient<FeedbackHttpClient>();
+            builder.Services.AddHttpClient<UserHttpClient>();
 
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
             builder.Services.AddScoped<IClientIpService, ClientIpService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
