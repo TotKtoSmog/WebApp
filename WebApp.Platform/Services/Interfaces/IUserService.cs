@@ -5,6 +5,8 @@ namespace WebApp.Platform.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task<bool> CreateUserAsync(UserRegistration user);
+        public Task<bool> RegistrationUserAsync(UserRegistration user);
+        public Task<User> CreateUserAsync(UserRegistration user);
+        public Task<User?> GetUserByEmailAsync(string email);
     }
 }
