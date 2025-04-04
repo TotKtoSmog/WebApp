@@ -22,5 +22,18 @@ namespace WebApp.API.Repositories
             await context.SaveChangesAsync();
             return user;
         }
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                return await _context.CreateDbContext().Users.FirstOrDefaultAsync(x => x.Email == email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении пользователя по email: {Email}", email);
+                return null;
+            }
+        }
     }
 }
