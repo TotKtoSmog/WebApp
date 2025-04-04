@@ -4,6 +4,6 @@ namespace WebApp.API.Repositories.Interface
 {
     public interface ILocationInHomePageViewRepository
     {
-        public Task<LocationInHomePage> GetLocationByPageNameAsync(string pageName);
+        public Task<LocationInHomePage?> GetLocationByPageNameAsync(string pageName);
     }
 }

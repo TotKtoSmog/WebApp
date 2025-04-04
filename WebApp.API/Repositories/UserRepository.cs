@@ -17,17 +17,36 @@ namespace WebApp.API.Repositories
         }
         public async Task<User> CreateAsync(User user)
         {
-            var context = await _context.CreateDbContextAsync();
-            await context.Users.AddAsync(user);
-            await context.SaveChangesAsync();
-            return user;
+            user.Email = user.Email.Trim().ToLowerInvariant();
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                await context.Users.AddAsync(user);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Пользователь создан: {Email}", user.Email);
+
+                return user;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении пользователя с email: {Email}", user.Email);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при создании пользователя: {Email}", user.Email);
+                throw;
+            }
         }
         public async Task<User?> GetUserByEmailAsync(string email)
         {
+            string normalizedEmail = email.Trim().ToLowerInvariant();
             await using var context = await _context.CreateDbContextAsync();
             try
             {
-                return await _context.CreateDbContext().Users.FirstOrDefaultAsync(x => x.Email == email);
+                return await context.Users.FirstOrDefaultAsync(x => x.Email == normalizedEmail);
             }
             catch (Exception ex)
             {
