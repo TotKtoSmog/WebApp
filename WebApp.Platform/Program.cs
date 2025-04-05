@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Services;
 using WebApp.Platform.Services.Interfaces;
@@ -14,6 +17,36 @@ namespace WebApp.Platform
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpContextAccessor();
 
+            var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.ContainsKey("jwt_token"))
+                        {
+                            context.Token = context.Request.Cookies["jwt_token"];
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
             builder.Services.AddHttpClient();
             builder.Services.AddHttpClient<CityHttpClient>();
             builder.Services.AddHttpClient<CityViewHttpClient>();
@@ -29,6 +62,7 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IClientIpService, ClientIpService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
             var app = builder.Build();
 
@@ -45,6 +79,7 @@ namespace WebApp.Platform
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
