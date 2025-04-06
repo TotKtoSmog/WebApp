@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 
@@ -15,6 +16,7 @@ namespace WebApp.Platform.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         public IActionResult Index() => View();
         [HttpGet]
         public IActionResult Registration()
@@ -40,6 +42,9 @@ namespace WebApp.Platform.Controllers
         [HttpGet]
         public IActionResult Authorization()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index");
+
             ModelState.Clear();
             return View();
         }
@@ -48,11 +53,19 @@ namespace WebApp.Platform.Controllers
         {
             if (!ModelState.IsValid)
                 return View(user);
-            if(await _userService.AuthorizationUserAsync(user) == null)
+            var token = await _userService.AuthorizationUserAsync(user);
+            if (token == null)
             {
                 ModelState.AddModelError("", "Пользователь не найден. Возможно неверно указан логин или пароль.");
                 return View(user);
             }
+            Response.Cookies.Append("jwt_token", token, new CookieOptions
+            {
+                HttpOnly = true,               
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddMinutes(30)
+            });
             return RedirectToAction("Index");
         }
     }
