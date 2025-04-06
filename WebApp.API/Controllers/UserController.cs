@@ -23,6 +23,34 @@ namespace WebApp.API.Controllers
             User newuser = await _userRepository.CreateAsync(user);
             return CreatedAtAction(nameof(Create), user);
         }
+        [HttpPut("Update")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Update([FromBody] User user)
+        {
+            if(await _userRepository.GetUserByIdAsync(user.Id) == null)
+            {
+                _logger.LogInformation("Пользователь с id {id} не найден", user.Id);
+                return NotFound($"Пользователь с id {user.Id} не найден");
+            }
+            await _userRepository.UpdateAsync(user);
+            return Ok(user);
+        }
+
+        [HttpGet("GetUserById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Get(int id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if(user == null)
+            {
+                _logger.LogInformation("Пользователь с id {id} не найден", id);
+                return NotFound($"Пользователь с id {id} не найден");
+            }
+            return Ok(user);
+        }
+
         [HttpGet("GetUserByEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

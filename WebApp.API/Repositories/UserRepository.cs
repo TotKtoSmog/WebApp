@@ -54,5 +54,48 @@ namespace WebApp.API.Repositories
                 return null;
             }
         }
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении пользователя по id: {id}", id);
+                return null;
+            }
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            user.Email = user.Email.Trim().ToLowerInvariant();
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var oldUser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
+                if (oldUser != null)
+                {
+                    oldUser.FirstName = user.FirstName;
+                    oldUser.LastName = user.LastName;
+                    oldUser.UserType = user.UserType;
+                    oldUser.Age = user.Age;
+                    oldUser.Email = user.Email;
+                    oldUser.LastIp = user.LastIp;
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении изменений пользователя с id: {id}", user.Id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при обновления данных о пользователе по id: {id}", user.Id);
+                throw;
+            }
+        }
     }
 }

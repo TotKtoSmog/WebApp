@@ -6,5 +6,7 @@ namespace WebApp.API.Repositories.Interface
     {
         public Task<User> CreateAsync(User user);
         public Task<User?> GetUserByEmailAsync(string email);
+        public Task UpdateAsync(User user);
+        public Task<User?> GetUserByIdAsync(int id);
     }
 }
