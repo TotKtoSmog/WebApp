@@ -2,6 +2,8 @@
 {
     public interface IJwtTokenService
     {
-        string GenerateToken(string email, bool role);
+        string GenerateToken(string email, bool role, int id, string flname);
+        string? GetUserIdFromToken(string token);
+        string? GetNameUserFromToken(string token);
     }
 }
