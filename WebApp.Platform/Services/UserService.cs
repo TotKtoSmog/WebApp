@@ -24,7 +24,11 @@ namespace WebApp.Platform.Services
         {
             var result = await GetUserByEmailAsync(user.Email);
             if (result != null && _passwordHasher.VerifyPassword(user.Password, result.PasswordHash))
+            {
+                result.LastIp = _clientIpService.GetClientIp();
+                await UpdateUserAsync(result);
                 return _jwtTokenService.GenerateToken(result.Email, result.UserType);
+            }
             return null;
         }
 
@@ -52,5 +56,8 @@ namespace WebApp.Platform.Services
             await CreateUserAsync(user);
             return true;
         }
+
+        public async Task UpdateUserAsync(User user)
+            => await _userHttpClient.UpdateUserAsync(user);
     }
 }

@@ -82,6 +82,7 @@ namespace WebApp.API.Repositories
                     oldUser.UserType = user.UserType;
                     oldUser.Age = user.Age;
                     oldUser.Email = user.Email;
+                    oldUser.PasswordHash = user.PasswordHash;
                     oldUser.LastIp = user.LastIp;
                     await context.SaveChangesAsync();
                 }

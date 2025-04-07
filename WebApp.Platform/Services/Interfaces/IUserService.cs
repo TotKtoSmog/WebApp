@@ -9,5 +9,6 @@ namespace WebApp.Platform.Services.Interfaces
         public Task<string?> AuthorizationUserAsync(UserAuthorization user);
         public Task<User> CreateUserAsync(UserRegistration user);
         public Task<User?> GetUserByEmailAsync(string email);
+        public Task UpdateUserAsync(User user);
     }
 }
