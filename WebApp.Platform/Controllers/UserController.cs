@@ -17,6 +17,9 @@ namespace WebApp.Platform.Controllers
         }
 
         [Authorize]
+        [HttpGet("[controller]/profile")]
+        [HttpGet("[controller]/index")]
+        [HttpGet("[controller]")]
         public IActionResult Index() => View();
         [HttpGet]
         public IActionResult Registration()
@@ -43,7 +46,7 @@ namespace WebApp.Platform.Controllers
         public IActionResult Authorization()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index");
+                return RedirectToAction("profile");
 
             ModelState.Clear();
             return View();
