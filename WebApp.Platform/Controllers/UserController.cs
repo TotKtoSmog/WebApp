@@ -71,12 +71,11 @@ namespace WebApp.Platform.Controllers
             });
             return RedirectToAction("Index");
         }
-
+        [HttpPost]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("jwt_token");
             return RedirectToAction("Authorization");
         }
-
     }
 }
