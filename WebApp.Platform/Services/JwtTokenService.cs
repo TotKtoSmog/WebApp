@@ -50,6 +50,22 @@ namespace WebApp.Platform.Services
             }
             return null;
         }
+
+        public string? GetUserEmailFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            if (handler.CanReadToken(token))
+            {
+                var jwtToken = handler.ReadJwtToken(token);
+
+                var userIdClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+
+                if (userIdClaim != null)
+                    return userIdClaim.Value;
+            }
+            return null;
+        }
         public string? GetUserIdFromToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();

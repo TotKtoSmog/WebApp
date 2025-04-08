@@ -20,7 +20,12 @@ namespace WebApp.Platform.Controllers
         [HttpGet("[controller]/profile")]
         [HttpGet("[controller]/index")]
         [HttpGet("[controller]")]
-        public IActionResult Index() => View();
+        public async Task<IActionResult> Index()
+        {
+            var token = Request.Cookies["jwt_token"];
+            var user = await _userService.GetUserByTokenAsync(token ?? "");
+            return View(user);
+        }
         [HttpGet]
         public IActionResult Registration()
         {

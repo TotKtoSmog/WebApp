@@ -49,6 +49,15 @@ namespace WebApp.Platform.Services
 
         public async Task<User?> GetUserByEmailAsync(string email)
             => await _userHttpClient.GetUserByEmailAsync(email);
+
+        public async Task<User?> GetUserByTokenAsync(string token)
+        {
+            string email = _jwtTokenService.GetUserEmailFromToken(token) ?? "";
+            if (!string.IsNullOrEmpty(email))
+                return await _userHttpClient.GetUserByEmailAsync(email) ?? null;
+            return null;
+        }
+
         public async Task<bool> RegistrationUserAsync(UserRegistration user)
         {
             var result = await GetUserByEmailAsync(user.Email);
