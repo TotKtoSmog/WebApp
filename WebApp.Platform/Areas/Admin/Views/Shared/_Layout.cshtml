@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using WebApp.Platform
+@using WebApp.Platform.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@namespace WebApp.Platform.Areas.Admin.Views
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
@@ -7,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApp.Platform.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-layout.css" asp-append-version="true" />
 </head>
 <body>
@@ -22,7 +27,7 @@
                 <li class="nav-item"><a class="nav-link" href="#">Пользователи</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Настройки</a></li>
                 <li class="nav-item">
-                    <form asp-controller="AdminPanel" asp-action="Logout" method="post" class="d-inline">
+                    <form asp-area="Admin" asp-controller="AdminPanel" asp-action="Logout" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="nav-link btn btn-link p-0" style="color: #0d6efd; text-decoration: none;">
                             Выход

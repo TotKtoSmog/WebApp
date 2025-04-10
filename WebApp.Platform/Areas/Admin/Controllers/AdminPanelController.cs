@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApp.Platform.Controllers
+namespace WebApp.Platform.Areas.Admin.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminPanelController : Controller
     {
         public IActionResult Index() => View();
@@ -12,7 +13,7 @@ namespace WebApp.Platform.Controllers
         public IActionResult Logout()
         {
             Response.Cookies.Delete("jwt_token");
-            return RedirectToAction("Authorization","User");
+            return RedirectToAction("Authorization", "User", new { area = "" });
         }
     }
 }

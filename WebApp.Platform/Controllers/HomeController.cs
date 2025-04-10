@@ -17,7 +17,11 @@ namespace WebApp.Platform.Controllers
             _homeService = homeService;
         }
         public async Task<IActionResult> Index()
-            => View(await _homeService.GetAllCityAsync());
+        {
+            if (User.IsInRole("Admin"))
+                return RedirectToAction("Index", "AdminPanel", new { area = "Admin" });
+            return View(await _homeService.GetAllCityAsync());
+        }
         public IActionResult Privacy()
         {
             return View();
