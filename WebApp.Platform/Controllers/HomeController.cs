@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApp.API.Models;
-using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebApp.Platform.Areas.Admin.Services;
+using WebApp.Platform.Areas.Admin.Services.Interfaces;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services;
@@ -74,6 +76,7 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IAdminCityService, AdminCityService>();
 
             var app = builder.Build();
 
