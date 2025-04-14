@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using WebApp.API.Contexts;
 using WebApp.API.Models;
 using WebApp.API.Repositories.Interface;
@@ -87,6 +88,29 @@ namespace WebApp.API.Repositories
             {
                 _logger.LogError(ex, "Ошибка при получении списка всех городов");
                 return Enumerable.Empty<City>();
+            }
+        }
+
+        public async Task<City?> GetAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка получить город с некорректным Id: {id}", id);
+                return null;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var city = await context.Cities.FirstOrDefaultAsync(c => c.Id == id);
+
+                if(city == null)
+                    _logger.LogInformation("Город с id '{id}' не найден.", id);
+                return city;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении города по id: {id}", id);
+                return null;
             }
         }
 
