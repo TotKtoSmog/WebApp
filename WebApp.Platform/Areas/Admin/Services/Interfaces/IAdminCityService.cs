@@ -6,6 +6,7 @@ namespace WebApp.Platform.Areas.Admin.Services.Interfaces
     public interface IAdminCityService
     {
         public Task<List<City>> GetAllCityAsync();
+        public Task<City?> GetCityByPageNameAsync(string pageName);
         public Task<City> GetCityAsync(int cityId);
         public Task UpdateCityAsync(City city);
         public Task DeleteCityAsync(int cityId);

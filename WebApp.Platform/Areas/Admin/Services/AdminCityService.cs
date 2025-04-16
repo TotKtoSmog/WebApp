@@ -14,7 +14,8 @@ namespace WebApp.Platform.Areas.Admin.Services
             _cityHttpClient = cityHttpClient;
             _locationViewHttpClient = locationViewHttpClient;
         }
-
+        public async Task<City?> GetCityByPageNameAsync(string pageName)
+            => await _cityHttpClient.GetCityByPageNameAsync(pageName);
         public async Task<City> CreateCityAsync(City city)
             => await _cityHttpClient.CreateCityAsync(city);
         public async Task DeleteCityAsync(int cityId)
