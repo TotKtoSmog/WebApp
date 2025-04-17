@@ -25,6 +25,7 @@ namespace WebApp.API
             builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddScoped<IFeedbackViewRepository, FeedbackViewRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 
             builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
@@ -34,6 +35,7 @@ namespace WebApp.API
             builder.Services.AddDbContextFactory<FeedbackContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<FeedbackViewContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<UserContext>(o => o.UseNpgsql(connectionString));
+            builder.Services.AddDbContextFactory<LocationContext>(o => o.UseNpgsql(connectionString));
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

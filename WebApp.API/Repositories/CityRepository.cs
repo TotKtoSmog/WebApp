@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApp.API.Contexts;
 using WebApp.API.Models;
 using WebApp.API.Repositories.Interface;
