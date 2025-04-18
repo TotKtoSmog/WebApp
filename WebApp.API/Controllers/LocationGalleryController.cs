@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.API.Models;
 using WebApp.API.Repositories.Interface;
 
@@ -38,8 +39,8 @@ namespace WebApp.API.Controllers
         public async Task<ActionResult<LocationGallery>> CreateAsync([FromBody] LocationGallery newGallery)
         {
             if (newGallery == null) return BadRequest();
-            LocationGallery gallery = await _repository.CreateAsync(newGallery);
-            return gallery;
+            LocationGallery createdGallery = await _repository.CreateAsync(newGallery);
+            return Created($"/api/LocationGallery/{createdGallery.Id}", createdGallery);
         }
     }
 }
