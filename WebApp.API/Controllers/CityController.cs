@@ -24,8 +24,8 @@ namespace WebApp.API.Controllers
             => Ok(await _repository.GetAllAsync());
 
         [HttpGet("GetVisibleCity")]
-        public async Task<ActionResult<IEnumerable<City>>> GetVisibleCityAsync() 
-            => Ok(await _repository.GetVisibleCityAsync());
+        public async Task<ActionResult<IEnumerable<City>>> GetVisibleCityAsync()
+            => Ok(await _viewRepository.GetVisibleAsync());
 
         [HttpGet("GetCityInHomePage")]
         public async Task<ActionResult<IEnumerable<City>>> GetCityInHomePageAsync()
