@@ -48,7 +48,7 @@ namespace WebApp.API.Repositories
         {
             if(id <= 0)
             {
-                _logger.LogWarning("Попытка удалении город с некорректным Id: {id}", id);
+                _logger.LogWarning("Попытка удаления город с некорректным Id: {id}", id);
                 return;
             }
             await using var context = await _context.CreateDbContextAsync();

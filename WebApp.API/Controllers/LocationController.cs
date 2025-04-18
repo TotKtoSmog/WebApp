@@ -72,5 +72,16 @@ namespace WebApp.API.Controllers
             await _repositoryLocation.UpdateAsync(location);
             return NoContent();
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            if (id <= 0) return BadRequest();
+            if (await _repositoryLocation.GetAsync(id) == null) return NotFound();
+            await _repositoryLocation.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

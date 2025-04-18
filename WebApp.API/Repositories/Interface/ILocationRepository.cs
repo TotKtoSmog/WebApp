@@ -8,5 +8,6 @@ namespace WebApp.API.Repositories.Interface
         public Task<IEnumerable<Location>> GetLocationByCityIdAsync(int cityId);
         public Task<Location> CreateAsync(Location location);
         public Task UpdateAsync(Location location);
+        public Task DeleteAsync(int id);
     }
 }
