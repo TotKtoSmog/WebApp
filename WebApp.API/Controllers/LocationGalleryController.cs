@@ -42,5 +42,14 @@ namespace WebApp.API.Controllers
             LocationGallery createdGallery = await _repository.CreateAsync(newGallery);
             return Created($"/api/LocationGallery/{createdGallery.Id}", createdGallery);
         }
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateAsync([FromBody] LocationGallery gallery)
+        {
+            if (gallery == null) return BadRequest();
+            await _repository.UpdateAsync(gallery);
+            return NoContent();
+        }
     }
 }
