@@ -40,6 +40,17 @@ namespace WebApp.API.Controllers
             if(location == null) return NotFound();
             return Ok(location);
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Location>> CreateAsync([FromBody] Location newLocation)
+        {
+            if (newLocation == null) return BadRequest();
+            Location location = await _repositoryLocation.CreateAsync(newLocation);
+            return CreatedAtAction(nameof(CreateAsync), location);
+        }
+
         [HttpGet("GetLocationByCityId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,8 +58,8 @@ namespace WebApp.API.Controllers
         public async Task<ActionResult<IEnumerable<Location>>> GetLocationByCityIdAsync(int cityId)
         {
             if (cityId <= 0) return BadRequest();
-            IEnumerable<Location> location = await _repositoryLocation.GetLocationByCityId(cityId);
-            if (location.Count() == 0) return NotFound();
+            IEnumerable<Location> location = await _repositoryLocation.GetLocationByCityIdAsync(cityId);
+            if (!location.Any()) return NotFound();
             return Ok(location);
         }
     }

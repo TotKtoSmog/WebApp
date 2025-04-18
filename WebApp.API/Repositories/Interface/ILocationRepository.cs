@@ -5,6 +5,8 @@ namespace WebApp.API.Repositories.Interface
     public interface ILocationRepository
     {
         public Task<Location?> GetAsync(int id);
-        Task<IEnumerable<Location>> GetLocationByCityId(int cityId);
+        public Task<IEnumerable<Location>> GetLocationByCityIdAsync(int cityId);
+        public Task<Location> CreateAsync(Location location);
+
     }
 }
