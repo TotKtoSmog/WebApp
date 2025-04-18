@@ -6,5 +6,6 @@ namespace WebApp.API.Repositories.Interface
     {
         public Task<IEnumerable<LocationGallery>> GetGalleryByIdLocationAsync(int locationId);
         public Task<LocationGallery?> GetAsync(int id);
+        public Task<LocationGallery> CreateAsync(LocationGallery gallery);
     }
 }
