@@ -62,5 +62,15 @@ namespace WebApp.API.Controllers
             if (!location.Any()) return NotFound();
             return Ok(location);
         }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateAsync([FromBody] Location location)
+        {
+            if (location == null) return BadRequest();
+            await _repositoryLocation.UpdateAsync(location);
+            return NoContent();
+        }
     }
 }
