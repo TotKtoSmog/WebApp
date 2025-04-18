@@ -53,7 +53,7 @@ namespace WebApp.Platform.ClientAPI
                     throw new ArgumentException("pageName не может быть пустым");
                 }
 
-                string url = $"{BaseUrl}/Location/GetLocationByPageName?pageName={Uri.EscapeDataString(pageName)}";
+                string url = $"{BaseUrl}/Location/GetLocationsByPageName?pageName={Uri.EscapeDataString(pageName)}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
