@@ -68,6 +68,7 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient<FeedbackViewHttpClient>();
             builder.Services.AddHttpClient<FeedbackHttpClient>();
             builder.Services.AddHttpClient<UserHttpClient>();
+            builder.Services.AddHttpClient<LocationHttpClient>();
 
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<ICityService, CityService>();

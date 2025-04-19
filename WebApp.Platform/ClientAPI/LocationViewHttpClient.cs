@@ -42,7 +42,6 @@ namespace WebApp.Platform.ClientAPI
                 throw;
             }
         }
-
         public async Task<API.Models.LocationInHomePage> GetLocationByPageNameAsync(string pageName)
         {
             try
