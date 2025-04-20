@@ -11,9 +11,10 @@ namespace WebApp.Platform.Areas.Admin.Services
         {
             _locationHttpClient = locationHttpClient;
         }
-        public Task<List<Location>> GetAllLocationsAsync()
+        public async Task<List<Location>> GetAllLocationsAsync()
         {
-            throw new NotImplementedException();
+            var locations = await _locationHttpClient.GetAllAsync();
+            return locations.ToList();
         }
     }
 }
