@@ -1,9 +1,11 @@
-﻿using WebApp.API.Models;
+﻿using WebApp.Platform.Areas.Admin.Models;
 
 namespace WebApp.Platform.Areas.Admin.Services.Interfaces
 {
     public interface IAdminLocationService
     {
-        public Task<List<Location>> GetAllLocationsAsync();
+        public Task<List<API.Models.Location>> GetAllLocationsAsync();
+        public Task<API.Models.Location?> GetLocationAsync(int Id);
+        public Task<AllLocationInfo> GetAllLocationInfoAsync(int Id);
     }
 }

@@ -1,4 +1,4 @@
-﻿using WebApp.API.Models;
+﻿using WebApp.Platform.Areas.Admin.Models;
 using WebApp.Platform.Areas.Admin.Services.Interfaces;
 using WebApp.Platform.ClientAPI;
 
@@ -11,10 +11,20 @@ namespace WebApp.Platform.Areas.Admin.Services
         {
             _locationHttpClient = locationHttpClient;
         }
-        public async Task<List<Location>> GetAllLocationsAsync()
+
+        public async Task<AllLocationInfo> GetAllLocationInfoAsync(int Id)
+        {
+            var location = await GetLocationAsync(Id);
+            return new AllLocationInfo(Location.ConvertToUILocation(location));
+        }
+
+        public async Task<List<API.Models.Location>> GetAllLocationsAsync()
         {
             var locations = await _locationHttpClient.GetAllAsync();
             return locations.ToList();
         }
+
+        public async Task<API.Models.Location?> GetLocationAsync(int Id)
+            => await _locationHttpClient.GetAsync(Id);
     }
 }
