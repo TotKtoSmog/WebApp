@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Platform.Areas.Admin.Models;
 using WebApp.Platform.Areas.Admin.Services.Interfaces;
-using WebApp.API.Models;
 
 namespace WebApp.Platform.Areas.Admin.Controllers
 {
@@ -21,7 +21,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<Location> locations = await _locationService.GetAllLocationsAsync();
+            List<API.Models.Location> locations = await _locationService.GetAllLocationsAsync();
             if(locations.Count < 1) _logger.LogWarning("Получено 0 локаций городов");
             return View(locations);
         }
@@ -30,8 +30,13 @@ namespace WebApp.Platform.Areas.Admin.Controllers
         {
             var information = await _locationService.GetAllLocationInfoAsync(id);
             if (information == null) return NotFound();
-
             return View("CreateOrEdit", information);
+        }
+        [HttpPost]
+        public IActionResult CreateOrEdit(AllLocationInfo model)
+        {
+
+            return RedirectToAction("Index");
         }
     }
 }

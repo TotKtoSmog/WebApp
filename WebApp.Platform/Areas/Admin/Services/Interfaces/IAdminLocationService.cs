@@ -6,6 +6,7 @@ namespace WebApp.Platform.Areas.Admin.Services.Interfaces
     {
         public Task<List<API.Models.Location>> GetAllLocationsAsync();
         public Task<API.Models.Location?> GetLocationAsync(int Id);
+        public Task<List<API.Models.LocationGallery>> GetLocationGalleryAsync(int Id);
         public Task<AllLocationInfo> GetAllLocationInfoAsync(int Id);
     }
 }
