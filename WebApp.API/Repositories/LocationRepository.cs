@@ -112,7 +112,6 @@ namespace WebApp.API.Repositories
                 oldLocation.PictureInCityLink = location.PictureInCityLink;
                 oldLocation.PicturePageLink = location.PicturePageLink;
                 oldLocation.PageName = location.PageName;
-                oldLocation.Rating = location.Rating;
                 oldLocation.PageVisible = location.PageVisible;
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
