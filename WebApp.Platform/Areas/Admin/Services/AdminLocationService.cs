@@ -36,5 +36,11 @@ namespace WebApp.Platform.Areas.Admin.Services
             var gallery = await _locationGalleryHttpClient.GetLocationGalleryByIdLocationAsync(Id);
             return gallery.ToList();
         }
+
+        public async Task UpdateLocation(Location location)
+        {
+            API.Models.Location dbLocation = Location.ConvertToDBLocation(location);
+            await _locationHttpClient.UpdateAsync(dbLocation);
+        }
     }
 }
