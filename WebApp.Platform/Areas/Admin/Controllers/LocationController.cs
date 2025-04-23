@@ -37,6 +37,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
         {
             if(model?.Location?.Id != 0)
                 await _locationService.UpdateLocation(model?.Location);
+            await _locationService.EditGallery(model.Gallery, model.Location.Id);
             return RedirectToAction("Index");
         }
     }
