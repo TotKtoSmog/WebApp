@@ -51,10 +51,8 @@ namespace WebApp.Platform.Areas.Admin.Services
             var deleteTasks = new List<Task>();
             var createTasks = new List<Task>();
 
-            // Копия входных данных
             var unmatchedIncoming = new List<API.Models.LocationGallery >(incomingGallery);
 
-            // 1. Сопоставление и обновление
             foreach (var existing in existingGallery)
             {
                 var match = unmatchedIncoming.FirstOrDefault(newItem =>
@@ -62,28 +60,20 @@ namespace WebApp.Platform.Areas.Admin.Services
 
                 if (match != null)
                 {
-                    // Если ID есть, но данные поменялись — обновляем
                     if (match.Id != 0 && !AreEqual(existing, match))
                     {
                         updateTasks.Add(UpdateGallery(match));
                     }
-                    // Удаляем из списка, чтобы не обработать повторно
                     unmatchedIncoming.Remove(match);
                 }
                 else
                 {
-                    // Нет соответствия — удаляем
                     deleteTasks.Add(DeleteGallery(existing.Id));
                 }
             }
-
-            // 2. Оставшиеся — это точно новые
             foreach (var newItem in unmatchedIncoming)
-            {
                 createTasks.Add(CreateGallery(newItem));
-            }
 
-            // Выполнение по этапам
             await Task.WhenAll(updateTasks);
             await Task.WhenAll(deleteTasks);
             await Task.WhenAll(createTasks);
@@ -96,5 +86,11 @@ namespace WebApp.Platform.Areas.Admin.Services
             => await _locationGalleryHttpClient.CreateAsync(gallery);
         private bool AreEqual(API.Models.LocationGallery a, API.Models.LocationGallery b)
             => a.Id == b.Id && a.LocationId == b.LocationId && a.Title == b.Title && a.PictureLink == b.PictureLink;
+
+        public async Task<API.Models.Location> CreateLocation(Location location)
+        {
+            API.Models.Location dbLocation = Location.ConvertToDBLocation(location);
+            return await _locationHttpClient.CreateAsync(dbLocation); 
+        }
     }
 }
