@@ -83,6 +83,7 @@ namespace WebApp.API.Controllers
             await _repositoryLocation.DeleteAsync(id);
             return NoContent();
         }
+        
         [HttpGet("GetAll")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -90,6 +91,15 @@ namespace WebApp.API.Controllers
         {
             var locations = await _repositoryLocation.GetAllAsync();
             if(locations == null) return NotFound();
+            return Ok(locations);
+        }
+        [HttpGet("GetVisibleLocations")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Location>>> GetVisible()
+        {
+            var locations = await _repositoryLocation.GetVisibleAsync();
+            if (locations == null) return NotFound();
             return Ok(locations);
         }
     }
