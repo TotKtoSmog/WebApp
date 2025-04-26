@@ -128,7 +128,7 @@ namespace WebApp.Platform.ClientAPI
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при выполнении запроса GetVisibleLocationsByCityId");
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetVisibleLocationByCityIdAsync");
                 throw;
             }
         }
