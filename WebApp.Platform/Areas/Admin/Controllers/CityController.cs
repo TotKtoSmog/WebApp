@@ -59,5 +59,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> DeleteLocation(int id)
+        {
+            int idCity = await _cityService.DeleteLocationInCityAsync(id);
+            return RedirectToAction(nameof(Edit), new { id = idCity });
+        }
     }
 }

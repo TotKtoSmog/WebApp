@@ -13,5 +13,6 @@ namespace WebApp.Platform.Areas.Admin.Services.Interfaces
         public Task<City> CreateCityAsync(City city);
         public Task<AllCityInformation> GetAllCityInformationAsync(int id);
         public Task<List<LocationInCity>> GetLocationInCityByCityIdAsync(int cityId);
+        public Task<int> DeleteLocationInCityAsync(int idLocation);
     }
 }

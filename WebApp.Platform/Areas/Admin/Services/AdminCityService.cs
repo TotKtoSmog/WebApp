@@ -9,10 +9,13 @@ namespace WebApp.Platform.Areas.Admin.Services
     {
         private readonly CityHttpClient _cityHttpClient;
         private readonly LocationViewHttpClient _locationViewHttpClient;
-        public AdminCityService(CityHttpClient cityHttpClient, LocationViewHttpClient locationViewHttpClient)
+        private readonly IAdminLocationService _adminLocationService;
+        public AdminCityService(CityHttpClient cityHttpClient, LocationViewHttpClient locationViewHttpClient, 
+            IAdminLocationService adminLocationService)
         {
             _cityHttpClient = cityHttpClient;
             _locationViewHttpClient = locationViewHttpClient;
+            _adminLocationService = adminLocationService;
         }
         public async Task<City?> GetCityByPageNameAsync(string pageName)
             => await _cityHttpClient.GetCityByPageNameAsync(pageName);
@@ -40,5 +43,13 @@ namespace WebApp.Platform.Areas.Admin.Services
         }
         public async Task UpdateCityAsync(City city)
             => await _cityHttpClient.UpdateCityAsync(city);
+
+        public async Task<int> DeleteLocationInCityAsync(int idLocation)
+        {
+            var location = await _adminLocationService.GetLocationAsync(idLocation);
+            int idCity = location.IdCity;
+            await _adminLocationService.DeleteLocation(idLocation);
+            return idCity;
+        }
     }
 }
