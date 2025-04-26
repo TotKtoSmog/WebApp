@@ -25,6 +25,19 @@ namespace WebApp.API.Controllers
         [HttpGet("GetLocationsViewByCityId")]
         public async Task<ActionResult<IEnumerable<LocationInCity>>> GetLocationsByCityIdAsync(int cityId)
            => Ok(await _repositoryLocationInCity.GetLocationInCityByCityIdAsync(cityId));
+
+        [HttpGet("GetVisibleLocationsByCityId/{cityId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<LocationInCity>>> GetVisibleLocationsByCityIdAsync(int cityId)
+        {
+            if(cityId <= 0) return BadRequest();
+            var locations = await _repositoryLocation.GetVisibleLocationByCityIdAsync(cityId);
+            if(locations == null) return NotFound();
+            return Ok(locations);
+        }
+
         [HttpGet("GetLocationsByPageName")]
         public async Task<ActionResult<LocationInHomePage>> GetLocationByPageNameAsync(string pageName)
             => Ok(await _repositoryLocationInHomePage.GetLocationByPageNameAsync(pageName));
