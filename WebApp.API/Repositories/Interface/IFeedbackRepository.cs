@@ -6,5 +6,6 @@ namespace WebApp.API.Repositories.Interface
     {
         public Task<Feedback> CreateAsync(Feedback feedback);
         public Task<Feedback?> GetFeedbackAsync(int id);
+        public Task UpdateCityAsync(Feedback feedback);
     }
 }
