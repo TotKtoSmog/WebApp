@@ -29,7 +29,6 @@ namespace WebApp.API.Controllers
             Feedback newfeedback = await _feedbackRepository.CreateAsync(feedback);
             return CreatedAtAction(nameof(Create), feedback);
         }
-
         [HttpGet("GetFeedbackByIdLocation/{idLocation}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,7 +40,6 @@ namespace WebApp.API.Controllers
             if(Feedback.Count() == 0 || Feedback == null) return NotFound();
             return Ok(Feedback);
         }
-
         [HttpGet("GetAcceptedFeedback/{idLocation}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -53,7 +51,6 @@ namespace WebApp.API.Controllers
             if(Feedback.Count() == 0 || Feedback == null) return NotFound();
             return Ok(Feedback);
         }
-
         [HttpGet("Get/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,12 +71,11 @@ namespace WebApp.API.Controllers
             await _feedbackRepository.UpdateFeedbackAsync(feedback);
             return NoContent();
         }
-
         [HttpPatch("Accepted/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AcceptedFeedback(int id)
+        public async Task<ActionResult> AcceptedFeedback(int id)
         {
             if (id <= 0) return BadRequest();
 
@@ -87,6 +83,17 @@ namespace WebApp.API.Controllers
             if (feedback == null) return NotFound();
 
             await _feedbackRepository.AcceptedFeedbackAsync(id);
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+            if (await _feedbackRepository.GetFeedbackAsync(id) == null) return NotFound();
+            await _feedbackRepository.DeleteFeedbackAsync(id);
             return NoContent();
         }
     }

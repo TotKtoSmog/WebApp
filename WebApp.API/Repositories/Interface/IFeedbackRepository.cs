@@ -8,5 +8,6 @@ namespace WebApp.API.Repositories.Interface
         public Task<Feedback?> GetFeedbackAsync(int id);
         public Task UpdateFeedbackAsync(Feedback feedback);
         public Task AcceptedFeedbackAsync(int id);
+        public Task DeleteFeedbackAsync(int id);
     }
 }
