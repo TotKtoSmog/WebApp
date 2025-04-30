@@ -32,11 +32,11 @@ namespace WebApp.Platform.ClientAPI
                 throw;
             }
         }
-        public async Task<API.Models.Feedback?> GetFeedbackAsync(int id)
+        public async Task<API.Models.Feedback?> GetAsync(int id)
         {
             try
             {
-                string url = $"{BaseUrl}/GetFeedbackByIdLocation/{id}";
+                string url = $"{BaseUrl}/Get/{id}";
 
                 var response = await _httpClient.GetAsync(url);
 
@@ -57,5 +57,6 @@ namespace WebApp.Platform.ClientAPI
                 throw;
             }
         }
+
     }
 }
