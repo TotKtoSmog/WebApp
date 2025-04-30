@@ -11,6 +11,10 @@ namespace WebApp.Platform.Areas.Admin.Services
         {
             _feedbackHttpClient = feedbackHttpClient;
         }
+
+        public async Task AcceptedFeedbacksAsync(int id)
+            => await _feedbackHttpClient.AcceptedFeedbackAsync(id);
+
         public async Task<List<Feedback>> GetFeedbacksAsync()
         {
             var feedback = await _feedbackHttpClient.GetAllAsync();

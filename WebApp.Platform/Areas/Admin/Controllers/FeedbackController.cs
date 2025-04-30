@@ -23,5 +23,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
                 feedbacks = feedbacks.Where(f => f.IsAccepted == isAccepted.Value).ToList();
             return View(feedbacks);
         }
+        [HttpPost]
+        public async Task<IActionResult> Accepted(int id)
+        {
+            await _adminFeedbackService.AcceptedFeedbacksAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
