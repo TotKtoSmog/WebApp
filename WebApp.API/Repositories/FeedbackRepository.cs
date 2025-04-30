@@ -105,6 +105,19 @@ namespace WebApp.API.Repositories
                 throw;
             }
         }
+        public async Task<IEnumerable<Feedback>> GetAllAsync()
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                return await context.Feedbacks.OrderBy(n => n.Id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении списка всех отзывов");
+                return Enumerable.Empty<Feedback>();
+            }
+        }
         public async Task<Feedback?> GetFeedbackAsync(int id)
         {
             if(id<= 0)
