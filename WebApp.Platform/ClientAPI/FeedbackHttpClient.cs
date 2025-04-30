@@ -32,5 +32,30 @@ namespace WebApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<API.Models.Feedback?> GetFeedbackAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/GetFeedbackByIdLocation/{id}";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при получении отзыва: {response.StatusCode}");
+                }
+                return await response.Content.ReadFromJsonAsync<API.Models.Feedback>() ?? throw new JsonException("Ошибка десериализации ответа");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetFeedbackAsync");
+                throw;
+            }
+        }
     }
 }
