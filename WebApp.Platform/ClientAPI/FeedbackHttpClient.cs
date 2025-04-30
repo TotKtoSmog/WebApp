@@ -53,10 +53,27 @@ namespace WebApp.Platform.ClientAPI
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при выполнении запроса GetFeedbackAsync");
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetAsync");
                 throw;
             }
         }
-
+        public async Task UpdateFeedbackAsync(API.Models.Feedback feedback)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/Feedback", feedback);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при изменении отзыва: {response.StatusCode} - {responseContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Произошла ошибка при отправке запроса UpdateFeedbackAsync");
+                throw;
+            }
+        }
     }
 }
