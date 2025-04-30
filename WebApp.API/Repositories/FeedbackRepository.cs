@@ -163,7 +163,6 @@ namespace WebApp.API.Repositories
                 oldFeedback.SenderIpAddress = feedback.SenderIpAddress;
                 oldFeedback.Text = feedback.Text;
                 oldFeedback.Ball = feedback.Ball;
-                oldFeedback.DateTime = feedback.DateTime;
                 await context.SaveChangesAsync();
             }
             catch (DbUpdateException dbEx)

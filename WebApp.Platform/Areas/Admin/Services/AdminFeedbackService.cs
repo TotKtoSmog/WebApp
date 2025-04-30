@@ -26,5 +26,8 @@ namespace WebApp.Platform.Areas.Admin.Services
             var feedback = await _feedbackHttpClient.GetAllAsync();
             return feedback.ToList();
         }
+
+        public async Task UpdateFeedbackAsync(Feedback feedback)
+            => await _feedbackHttpClient.UpdateFeedbackAsync(feedback);
     }
 }
