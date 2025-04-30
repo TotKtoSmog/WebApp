@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace WebApp.Platform.ClientAPI
 {
@@ -72,6 +73,25 @@ namespace WebApp.Platform.ClientAPI
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Произошла ошибка при отправке запроса UpdateFeedbackAsync");
+                throw;
+            }
+        }
+        public async Task AcceptedFeedbackAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/Feedback/Accepted/{id}";
+                var response = await _httpClient.PatchAsync(url, new StringContent("{}", Encoding.UTF8, "application/json"));
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при подтверждения отзыва: {response.StatusCode} - {responseContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Произошла ошибка при отправке запроса AcceptedFeedbackAsync");
                 throw;
             }
         }
