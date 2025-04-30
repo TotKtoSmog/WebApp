@@ -37,7 +37,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Get/{id}";
+                string url = $"{BaseUrl}/Feedback/Get/{id}";
 
                 var response = await _httpClient.GetAsync(url);
 

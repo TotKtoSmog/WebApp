@@ -18,6 +18,9 @@ namespace WebApp.Platform.Areas.Admin.Services
         public async Task DeleteFeedbackAsync(int id)
             => await _feedbackHttpClient.DeleteFeedbackAsync(id);
 
+        public async Task<Feedback?> GetFeedbackByIdAsync(int id)
+            => await _feedbackHttpClient.GetAsync(id);
+
         public async Task<List<Feedback>> GetFeedbacksAsync()
         {
             var feedback = await _feedbackHttpClient.GetAllAsync();
