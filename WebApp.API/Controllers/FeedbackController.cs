@@ -99,10 +99,10 @@ namespace WebApp.API.Controllers
         [HttpGet("GetAll")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<FeedbackView>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<Feedback>>> GetAllAsync()
         {
             var feedbacks = await _feedbackRepository.GetAllAsync();
-            if(feedbacks.Count() == 0) return NotFound();
+            if(!feedbacks.Any()) return NotFound();
             return Ok(feedbacks);
         }
     }
