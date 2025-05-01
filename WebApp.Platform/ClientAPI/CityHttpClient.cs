@@ -6,7 +6,6 @@ namespace WebApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<CityHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7119/api";
         public CityHttpClient(HttpClient httpClient, ILogger<CityHttpClient> logger)
         {
             _httpClient = httpClient;
@@ -17,7 +16,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{BaseUrl}/City/GetAll");
+                var response = await _httpClient.GetAsync("City/GetAll");
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -38,7 +37,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{BaseUrl}/City/GetVisibleCity");
+                var response = await _httpClient.GetAsync("City/GetVisibleCity");
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -59,7 +58,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/City/GetCityByPageName";
+                string url = "City/GetCityByPageName";
                 if (!string.IsNullOrWhiteSpace(pageName))
                     url += $"?pageName={Uri.EscapeDataString(pageName)}";
 
@@ -90,7 +89,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/City/{id}";
+                string url = $"City/{id}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
@@ -110,7 +109,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/City/{id}";
+                string url = $"City/{id}";
                 var response = await _httpClient.DeleteAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -131,7 +130,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/City", city);
+                var response = await _httpClient.PutAsJsonAsync($"City", city);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -149,7 +148,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/City", city);
+                var response = await _httpClient.PostAsJsonAsync($"City", city);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {

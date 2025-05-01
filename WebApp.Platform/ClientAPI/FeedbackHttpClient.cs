@@ -7,7 +7,6 @@ namespace WebApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<FeedbackHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7119/api";
         public FeedbackHttpClient(HttpClient httpClient,
             ILogger<FeedbackHttpClient> logger)
         {
@@ -18,7 +17,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/Feedback/Create", feedback);
+                var response = await _httpClient.PostAsJsonAsync("Feedback/Create", feedback);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -37,7 +36,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Feedback/Get/{id}";
+                string url = $"Feedback/Get/{id}";
 
                 var response = await _httpClient.GetAsync(url);
 
@@ -62,7 +61,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/Feedback", feedback);
+                var response = await _httpClient.PutAsJsonAsync("Feedback", feedback);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -80,7 +79,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Feedback/Accepted/{id}";
+                string url = $"Feedback/Accepted/{id}";
                 var response = await _httpClient.PatchAsync(url, new StringContent("{}", Encoding.UTF8, "application/json"));
                 if (!response.IsSuccessStatusCode)
                 {
@@ -99,7 +98,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Feedback/{id}";
+                string url = $"Feedback/{id}";
                 var response = await _httpClient.DeleteAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -120,7 +119,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{BaseUrl}/Feedback/GetAll");
+                var response = await _httpClient.GetAsync("Feedback/GetAll");
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)

@@ -6,7 +6,6 @@ namespace WebApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<LocationViewHttpClient> _logger;
-        private const string BaseUrl = "https://localhost:7119/api";
 
         public LocationViewHttpClient(HttpClient httpClient, ILogger<LocationViewHttpClient> logger)
         {
@@ -24,7 +23,7 @@ namespace WebApp.Platform.ClientAPI
                     return [];
                 }
 
-                string url = $"{BaseUrl}/Location/GetLocationsViewByCityId?cityId={cityId}";
+                string url = $"Location/GetLocationsViewByCityId?cityId={cityId}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -52,7 +51,7 @@ namespace WebApp.Platform.ClientAPI
                     throw new ArgumentException("pageName не может быть пустым");
                 }
 
-                string url = $"{BaseUrl}/Location/GetLocationsByPageName?pageName={Uri.EscapeDataString(pageName)}";
+                string url = $"Location/GetLocationsByPageName?pageName={Uri.EscapeDataString(pageName)}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
 

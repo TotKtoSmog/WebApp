@@ -4,7 +4,6 @@
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<FeedbackViewHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7119/api";
         public FeedbackViewHttpClient(HttpClient httpClient, ILogger<FeedbackViewHttpClient> logger)
         {
             _httpClient = httpClient;
@@ -20,7 +19,7 @@
                     return [];
                 }
 
-                string url = $"{BaseUrl}/Feedback/GetFeedbackByIdLocation/{idLocation}";
+                string url = $"Feedback/GetFeedbackByIdLocation/{idLocation}";
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -48,7 +47,7 @@
                     return [];
                 }
 
-                string url = $"{BaseUrl}/Feedback/GetAcceptedFeedback/{idLocation}";
+                string url = $"Feedback/GetAcceptedFeedback/{idLocation}";
                 var response = await _httpClient.GetAsync(url);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];

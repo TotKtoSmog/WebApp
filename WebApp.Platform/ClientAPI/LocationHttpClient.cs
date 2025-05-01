@@ -5,7 +5,6 @@ namespace WebApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<LocationHttpClient> _logger;
-        private const string BaseUrl = "https://localhost:7119/api";
         public LocationHttpClient(HttpClient httpClient, ILogger<LocationHttpClient> logger)
         {
             _httpClient = httpClient;
@@ -16,7 +15,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/{id}";
+                string url = $"Location/{id}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
@@ -40,7 +39,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/GetAll";
+                string url = "Location/GetAll";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
@@ -64,7 +63,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/GetVisibleLocations";
+                string url = "Location/GetVisibleLocations";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
@@ -88,7 +87,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/GetLocationByCityId/{id}";
+                string url = $"Location/GetLocationByCityId/{id}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
@@ -112,7 +111,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/GetVisibleLocationsByCityId/{id}";
+                string url = $"Location/GetVisibleLocationsByCityId/{id}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
@@ -136,7 +135,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/Location", location);
+                var response = await _httpClient.PostAsJsonAsync("Location", location);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -155,7 +154,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/Location", location);
+                var response = await _httpClient.PutAsJsonAsync("Location", location);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -173,7 +172,7 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/{id}";
+                string url = $"Location/{id}";
                 var response = await _httpClient.DeleteAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
