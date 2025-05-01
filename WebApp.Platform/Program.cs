@@ -81,6 +81,8 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IAdminLocationService, AdminLocationService>();
             builder.Services.AddScoped<IAdminFeedbackService, AdminFeedbackService>();
 
+            
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

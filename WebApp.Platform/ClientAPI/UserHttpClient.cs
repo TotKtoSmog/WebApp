@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 
 namespace WebApp.Platform.ClientAPI
@@ -18,13 +17,9 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/User/Create", user);
+                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/User", user);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при создании пользователя: {response.StatusCode} - {responseContent}");
-                }
+                await EnsureSuccessAsync(response, "создании пользователя");
                 return JsonSerializer.Deserialize<API.Models.User>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
             }
             catch (Exception ex)
@@ -37,13 +32,9 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/User/Update", user);
+                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/User/{user.Id}", user);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при обновлении пользователя: {response.StatusCode} - {responseContent}");
-                }
+                await EnsureSuccessAsync(response, "обновлении пользователя");
                 return;
             }
             catch (Exception ex)
@@ -52,7 +43,6 @@ namespace WebApp.Platform.ClientAPI
                 throw;
             }
         }
-
         public async Task<API.Models.User?> GetUserByEmailAsync(string email)
         {
             try
@@ -63,7 +53,7 @@ namespace WebApp.Platform.ClientAPI
                     throw new ArgumentException("Email не может быть пустым.", nameof(email));
                 }
 
-                string url = $"{BaseUrl}/User/GetUserByEmail?email={Uri.EscapeDataString(email)}";
+                string url = $"{BaseUrl}/User/by-email?email={Uri.EscapeDataString(email)}";
                 var response = await _httpClient.GetAsync(url);
 
                 if (response.StatusCode == HttpStatusCode.NotFound)
@@ -72,13 +62,7 @@ namespace WebApp.Platform.ClientAPI
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogError("HTTP {StatusCode} при получении пользователя. Ответ: {Response}",
-                        response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении пользователя: {response.StatusCode}");
-                }
+                await EnsureSuccessAsync(response, "получении пользователя по email пользователя");
 
                 var user = await response.Content.ReadFromJsonAsync<API.Models.User>();
 
@@ -93,6 +77,15 @@ namespace WebApp.Platform.ClientAPI
             {
                 _logger.LogError(ex, "Неизвестная ошибка при выполнении запроса GetUserByEmailAsync.");
                 throw;
+            }
+        }
+        private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Ошибка при {Context}. Код: {StatusCode}, Ответ: {Content}", context, response.StatusCode, content);
+                throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
     }
