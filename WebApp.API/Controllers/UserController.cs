@@ -28,7 +28,7 @@ namespace WebApp.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Update([FromBody] User user)
         {
-            if(await _userRepository.GetUserByIdAsync(user.Id) == null)
+            if (await _userRepository.GetUserByIdAsync(user.Id) == null)
             {
                 _logger.LogInformation("Пользователь с id {id} не найден", user.Id);
                 return NotFound($"Пользователь с id {user.Id} не найден");
@@ -43,7 +43,7 @@ namespace WebApp.API.Controllers
         public async Task<ActionResult> Get(int id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-            if(user == null)
+            if (user == null)
             {
                 _logger.LogInformation("Пользователь с id {id} не найден", id);
                 return NotFound($"Пользователь с id {id} не найден");
@@ -64,6 +64,16 @@ namespace WebApp.API.Controllers
                 return NotFound($"Пользователь с email {email} не найден");
             }
             return Ok(user);
+        }
+
+        [HttpGet("GetAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            if (users == null || !users.Any()) return NotFound();
+            return Ok(users);
         }
     }
 }

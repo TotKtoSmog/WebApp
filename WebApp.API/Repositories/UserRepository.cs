@@ -40,6 +40,20 @@ namespace WebApp.API.Repositories
                 throw;
             }
         }
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                return await context.Users.OrderBy(n => n.Id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении списка всех локаций");
+                return [];
+            }
+        }
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             string normalizedEmail = email.Trim().ToLowerInvariant();
@@ -67,7 +81,6 @@ namespace WebApp.API.Repositories
                 return null;
             }
         }
-
         public async Task UpdateAsync(User user)
         {
             user.Email = user.Email.Trim().ToLowerInvariant();

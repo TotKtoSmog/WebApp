@@ -8,5 +8,6 @@ namespace WebApp.API.Repositories.Interface
         public Task<User?> GetUserByEmailAsync(string email);
         public Task UpdateAsync(User user);
         public Task<User?> GetUserByIdAsync(int id);
+        public Task <IEnumerable<User>> GetAllAsync();
     }
 }
