@@ -9,5 +9,6 @@ namespace WebApp.API.Repositories.Interface
         public Task UpdateAsync(User user);
         public Task<User?> GetUserByIdAsync(int id);
         public Task <IEnumerable<User>> GetAllAsync();
+        public Task DeleteAsync(int id);
     }
 }
