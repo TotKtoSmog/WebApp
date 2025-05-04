@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+
 namespace WebApp.Platform.ClientAPI
 {
     public class LocationHttpClient
@@ -10,7 +11,6 @@ namespace WebApp.Platform.ClientAPI
             _httpClient = httpClient;
             _logger = logger;
         }
-
         public async Task<API.Models.Location?> GetAsync(int id)
         {
             try
@@ -20,14 +20,9 @@ namespace WebApp.Platform.ClientAPI
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении локации: {response.StatusCode}");
-                }
-                return await response.Content.ReadFromJsonAsync<API.Models.Location>() ?? throw new JsonException("Ошибка десериализации ответа");
+                await EnsureSuccessAsync(response, $"локации по id={id}");
+                return await response.Content.ReadFromJsonAsync<API.Models.Location>()
+                    ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {
@@ -39,19 +34,14 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = "Location/GetAll";
+                string url = "Location";
 
                 var response = await _httpClient.GetAsync(url);
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return Enumerable.Empty<API.Models.Location>();
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении локаций: {response.StatusCode}");
-                }
-                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>() ?? throw new JsonException("Ошибка десериализации ответа");
+                await EnsureSuccessAsync(response, $"получения списка локаций");
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>()
+                    ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {
@@ -63,19 +53,14 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = "Location/GetVisibleLocations";
+                string url = "Location/visible";
 
                 var response = await _httpClient.GetAsync(url);
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return Enumerable.Empty<API.Models.Location>();
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении локаций: {response.StatusCode}");
-                }
-                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>() ?? throw new JsonException("Ошибка десериализации ответа");
+                await EnsureSuccessAsync(response, $"получения списка локаций для отображения");
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>()
+                    ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {
@@ -87,19 +72,14 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"Location/GetLocationByCityId/{id}";
+                string url = $"Location/by-city/{id}";
 
                 var response = await _httpClient.GetAsync(url);
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return Enumerable.Empty<API.Models.Location>();
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении локации: {response.StatusCode}");
-                }
-                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>() ?? throw new JsonException("Ошибка десериализации ответа");
+                await EnsureSuccessAsync(response, $"получения списка локаций по id города id={id}");
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>()
+                    ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {
@@ -111,19 +91,15 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"Location/GetVisibleLocationsByCityId/{id}";
+                string url = $"Location/visible/by-city/{id}";
 
                 var response = await _httpClient.GetAsync(url);
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return Enumerable.Empty<API.Models.Location>();
 
-                var responseContent = await response.Content.ReadAsStringAsync();
+                await EnsureSuccessAsync(response, $"получения списка локаций для отображения по id города id={id}");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении локации: {response.StatusCode}");
-                }
-                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>() ?? throw new JsonException("Ошибка десериализации ответа");
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>()
+                    ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {
@@ -136,13 +112,10 @@ namespace WebApp.Platform.ClientAPI
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("Location", location);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при создании локации: {response.StatusCode} - {responseContent}");
-                }
-                return JsonSerializer.Deserialize<API.Models.Location>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+                await EnsureSuccessAsync(response, $"создания локации");
+
+                return await response.Content.ReadFromJsonAsync<API.Models.Location>()
+                    ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {
@@ -154,13 +127,9 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync("Location", location);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при изменении локации: {response.StatusCode} - {responseContent}");
-                }
+                var response = await _httpClient.PutAsJsonAsync($"Location/{location.Id}", location);
+
+                await EnsureSuccessAsync(response, $"обновления локации с id={location.Id}");
             }
             catch (Exception ex)
             {
@@ -174,19 +143,21 @@ namespace WebApp.Platform.ClientAPI
             {
                 string url = $"Location/{id}";
                 var response = await _httpClient.DeleteAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    _logger.LogWarning("Ошибка удаления локации. Код: {StatusCode}, Ответ: {Content}",
-                        response.StatusCode, content);
-
-                    throw new HttpRequestException($"Ошибка удаления локации: {response.StatusCode}");
-                }
+                await EnsureSuccessAsync(response, $"удаления локации с id={id}");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при выполнении запроса DeleteAsync");
                 throw;
+            }
+        }
+        private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Ошибка при {Context}. Код: {StatusCode}, Ответ: {Content}", context, response.StatusCode, content);
+                throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
     }
