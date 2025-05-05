@@ -17,13 +17,9 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("Feedback/Create", feedback);
+                var response = await _httpClient.PostAsJsonAsync("Feedback", feedback);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при создании отзыва: {response.StatusCode} - {responseContent}");
-                }
+                await EnsureSuccessAsync(response, $"создание отзыва");
                 return JsonSerializer.Deserialize<API.Models.Feedback>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
             }
             catch (Exception ex)
@@ -36,19 +32,13 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"Feedback/Get/{id}";
+                string url = $"Feedback/{id}";
 
                 var response = await _httpClient.GetAsync(url);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении отзыва: {response.StatusCode}");
-                }
+                await EnsureSuccessAsync(response, $"получения отзыва по id={id}");
                 return await response.Content.ReadFromJsonAsync<API.Models.Feedback>() ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
@@ -61,13 +51,8 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync("Feedback", feedback);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при изменении отзыва: {response.StatusCode} - {responseContent}");
-                }
+                var response = await _httpClient.PutAsJsonAsync($"Feedback/{feedback.Id}", feedback);
+                await EnsureSuccessAsync(response, $"обновление отзыва");
             }
             catch (Exception ex)
             {
@@ -79,14 +64,9 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"Feedback/Accepted/{id}";
+                string url = $"Feedback/{id}/accept";
                 var response = await _httpClient.PatchAsync(url, new StringContent("{}", Encoding.UTF8, "application/json"));
-                if (!response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при подтверждения отзыва: {response.StatusCode} - {responseContent}");
-                }
+                await EnsureSuccessAsync(response, $"подтверждении отзыва");
             }
             catch (Exception ex)
             {
@@ -100,14 +80,7 @@ namespace WebApp.Platform.ClientAPI
             {
                 string url = $"Feedback/{id}";
                 var response = await _httpClient.DeleteAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    _logger.LogWarning("Ошибка удаления отзыва. Код: {StatusCode}, Ответ: {Content}",
-                        response.StatusCode, content);
-
-                    throw new HttpRequestException($"Ошибка удаления отзыва: {response.StatusCode}");
-                }
+                await EnsureSuccessAsync(response, $"удаления отзыва");
             }
             catch (Exception ex)
             {
@@ -119,14 +92,8 @@ namespace WebApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.GetAsync("Feedback/GetAll");
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении всех отзывов: {response.StatusCode}");
-                }
+                var response = await _httpClient.GetAsync("Feedback");
+                await EnsureSuccessAsync(response, $"при получении всех отзывов");
 
                 return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Feedback>>() ?? [];
             }
@@ -134,6 +101,15 @@ namespace WebApp.Platform.ClientAPI
             {
                 _logger.LogError(ex, "Ошибка при выполнении запроса GetAllAsync");
                 throw;
+            }
+        }
+        private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Ошибка при {Context}. Код: {StatusCode}, Ответ: {Content}", context, response.StatusCode, content);
+                throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
     }
