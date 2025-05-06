@@ -25,5 +25,19 @@ namespace WebApp.Platform.Areas.Admin.Controllers
 
             return View(users);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _adminUserService.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при удалении пользователя с ID {id}", id);
+            }
+            return RedirectToAction("Index", "User", new { area = "Admin" });
+        }
     }
 }

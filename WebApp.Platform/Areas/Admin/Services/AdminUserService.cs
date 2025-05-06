@@ -13,12 +13,18 @@ namespace WebApp.Platform.Areas.Admin.Services
             _httpClient = userHttpClient;
             _logger = logger;
         }
+
         public async Task<List<User>> GetAll()
         {
             var result = await _httpClient.GetAllAsync();
             List<User> users = result.ToList();
             _logger.LogInformation("Получен список с пользователями в размере {count}", users.Count);
             return users;
+        }
+        public async Task Delete(int id)
+        {
+            await _httpClient.DeleteUserAsync(id);
+            _logger.LogInformation("Попытка удаления пользователя с id={id}", id);
         }
     }
 }
