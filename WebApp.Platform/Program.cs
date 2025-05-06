@@ -95,8 +95,8 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IAdminCityService, AdminCityService>();
             builder.Services.AddScoped<IAdminLocationService, AdminLocationService>();
             builder.Services.AddScoped<IAdminFeedbackService, AdminFeedbackService>();
+            builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
-            
 
             var app = builder.Build();
 
