@@ -60,7 +60,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
                 try
                 {
                     await _cityService.CreateCityAsync(city);
-                    _notificationService.Success($"Город {city.PageName} успешно добавлен !!!");
+                    _notificationService.Success($"Город {city.PageName} успешно добавлен!!!");
                 }
                 catch 
                 {
@@ -72,7 +72,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
                 try
                 {
                     await _cityService.UpdateCityAsync(city);
-                    _notificationService.Success($"Город {city.PageName} успешно изменен !!!");
+                    _notificationService.Success($"Город {city.PageName} успешно изменен!!!");
                 }
                 catch
                 {
@@ -90,11 +90,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             try
             {
                 await _cityService.DeleteCityAsync(id);
-                _notificationService.Success($"Город с id {id} успешно удален !!!");
+                _notificationService.Success($"Город с id {id} успешно удален!!!");
             }
             catch
             {
-                _notificationService.Error($"Ой! Произошла ошибка при удалении города {id}");
+                _notificationService.Error($"Ой! Произошла ошибка при удалении города с id={id}");
             }
 
             return RedirectToAction(nameof(Index));
@@ -106,11 +106,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             try
             {
                 idCity = await _cityService.DeleteLocationInCityAsync(id);
-                _notificationService.Success($"Локация с id {id} успешно удалена !!!");
+                _notificationService.Success($"Локация с id={id} успешно удалена !!!");
             }
             catch
             {
-                _notificationService.Error($"Ой! Произошла ошибка при удалении локации {id}");
+                _notificationService.Error($"Ой! Произошла ошибка при удалении локации с id={id}");
             }
             return RedirectToAction(nameof(Edit), new { id = idCity });
         }

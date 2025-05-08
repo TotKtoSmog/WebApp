@@ -51,7 +51,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
                 try
                 {
                     await _locationService.UpdateLocation(model?.Location);
-                    _notifier.Success($"Локация {model.Location.PageName} успешно обновлена !!!");
+                    _notifier.Success($"Локация {model.Location.PageName} успешно обновлена!!!");
                 }
                 catch
                 {
@@ -65,7 +65,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
                     var location = await _locationService.CreateLocation(model.Location);
                     foreach (var item in model.Gallery)
                         item.LocationId = location.Id;
-                    _notifier.Success($"Локация {model.Location.PageName} успешно создана !!!");
+                    _notifier.Success($"Локация {model.Location.PageName} успешно создана!!!");
                 }
                 catch
                 {
@@ -100,7 +100,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             try
             {
                 await _locationService.DeleteLocation(id);
-                _notifier.Success($"Локация с id = {id} успешно удалена !!!");
+                _notifier.Success($"Локация с id = {id} успешно удалена!!!");
             }
             catch
             {
