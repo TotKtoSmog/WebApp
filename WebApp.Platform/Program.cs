@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -96,7 +97,7 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IAdminLocationService, AdminLocationService>();
             builder.Services.AddScoped<IAdminFeedbackService, AdminFeedbackService>();
             builder.Services.AddScoped<IAdminUserService, AdminUserService>();
-
+            builder.Services.AddScoped<INotificationService, TempDataNotificationService>();
 
             var app = builder.Build();
 
