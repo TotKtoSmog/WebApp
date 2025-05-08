@@ -10,9 +10,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
     public class CityController : Controller
     {
         private readonly IAdminCityService _cityService;
-        public CityController(IAdminCityService cityService)
+        private readonly INotificationService _notificationService;
+        public CityController(IAdminCityService cityService, INotificationService notificationService)
         {
             _cityService = cityService;
+            _notificationService = notificationService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -21,7 +23,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var information = await _cityService.GetAllCityInformationAsync(id);
-            if(information == null) return NotFound();
+            if (information == null)
+            {
+                _notificationService.Warning("Список городов оказался пуст");
+                return NotFound();
+            }
 
             return View("CreateOrEdit", information);
         }
@@ -37,7 +43,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             AllCityInformation model = new(city, city.Id != 0 ? await _cityService.GetLocationInCityByCityIdAsync(city.Id) : []);
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = $"Ой! Произошла ошибка не все обязательные поля заполнены";
+                _notificationService.Error($"Ой! Произошла ошибка не все обязательные поля заполнены");
                 return View("CreateOrEdit", model);
             }
 
@@ -45,7 +51,7 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             if (c != null && c.Id != city.Id)
             {
                 ModelState.AddModelError(nameof(city.PageName), "Страница с таким именем уже существует");
-                TempData["Error"] = $"Ой! Произошла ошибка страница с именем {city.PageName} уже существует";
+                _notificationService.Error($"Ой! Произошла ошибка страница с именем {city.PageName} уже существует");
                 return View("CreateOrEdit", model);
             }
             
@@ -54,24 +60,23 @@ namespace WebApp.Platform.Areas.Admin.Controllers
                 try
                 {
                     await _cityService.CreateCityAsync(city);
-                    TempData["Success"] = $"Город {city.PageName} успешно добавлен !!!";
+                    _notificationService.Success($"Город {city.PageName} успешно добавлен !!!");
                 }
                 catch 
                 {
-                    TempData["Error"] = $"Ой! Произошла ошибка при добавлении города {city.PageName}";
+                    _notificationService.Error($"Ой! Произошла ошибка при добавлении города {city.PageName}");
                 }
             }
-
             else
             {
                 try
                 {
                     await _cityService.UpdateCityAsync(city);
-                    TempData["Success"] = $"Город {city.PageName} успешно изменен !!!";
+                    _notificationService.Success($"Город {city.PageName} успешно изменен !!!");
                 }
                 catch
                 {
-                    TempData["Error"] = $"Ой! Произошла ошибка при изменении города {city.PageName}";
+                    _notificationService.Error($"Ой! Произошла ошибка при изменении города {city.PageName}");
                 }
             }
                 
@@ -85,11 +90,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             try
             {
                 await _cityService.DeleteCityAsync(id);
-                TempData["Success"] = $"Город с id {id} успешно удален !!!";
+                _notificationService.Success($"Город с id {id} успешно удален !!!");
             }
             catch
             {
-                TempData["Error"] = $"Ой! Произошла ошибка при удалении города {id}";
+                _notificationService.Error($"Ой! Произошла ошибка при удалении города {id}");
             }
 
             return RedirectToAction(nameof(Index));
@@ -101,11 +106,11 @@ namespace WebApp.Platform.Areas.Admin.Controllers
             try
             {
                 idCity = await _cityService.DeleteLocationInCityAsync(id);
-                TempData["Success"] = $"Локация с id {id} успешно удалена !!!";
+                _notificationService.Success($"Локация с id {id} успешно удалена !!!");
             }
             catch
             {
-                TempData["Error"] = $"Ой! Произошла ошибка при удалении локации {id}";
+                _notificationService.Error($"Ой! Произошла ошибка при удалении локации {id}");
             }
             return RedirectToAction(nameof(Edit), new { id = idCity });
         }
