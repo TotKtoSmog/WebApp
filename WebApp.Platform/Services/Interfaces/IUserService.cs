@@ -11,5 +11,6 @@ namespace WebApp.Platform.Services.Interfaces
         public Task<User?> GetUserByEmailAsync(string email);
         public Task UpdateUserAsync(User user);
         public Task<User?> GetUserByTokenAsync(string token);
+        public Task<List<Feedback>> GetUserFeedback(int id);
     }
 }
