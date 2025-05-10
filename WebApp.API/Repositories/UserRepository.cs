@@ -127,6 +127,7 @@ namespace WebApp.API.Repositories
                     oldUser.Email = user.Email;
                     oldUser.PasswordHash = user.PasswordHash;
                     oldUser.LastIp = user.LastIp;
+                    oldUser.AvatarLink = user.AvatarLink;
                     await context.SaveChangesAsync();
                 }
             }
