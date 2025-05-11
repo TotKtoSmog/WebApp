@@ -1,4 +1,5 @@
-﻿using WebApp.API.Models;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp.API.Models;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
@@ -9,17 +10,20 @@ namespace WebApp.Platform.Services
     {
         private readonly UserHttpClient _userHttpClient;
         private readonly FeedbackHttpClient _feedbackHttpClient;
+        private readonly LocationHttpClient _locationHttpClient;
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService, 
-            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient)
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
+            LocationHttpClient locationHttpClient)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
             _feedbackHttpClient = feedbackHttpClient;
+            _locationHttpClient = locationHttpClient;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -60,10 +64,24 @@ namespace WebApp.Platform.Services
             return null;
         }
 
-        public async Task<List<Feedback>> GetUserFeedback(int id)
+        public async Task<List<UserFeedback>> GetUserFeedback(int id)
         {
-            var result = await _feedbackHttpClient.GetAllAsync();
-            List<Feedback> feedbacks = result.Where(f => f.IdUser == id).ToList();
+            var feedbacksTask = _feedbackHttpClient.GetAllAsync();
+            var locationsTask = _locationHttpClient.GetAllAsync();
+
+            await Task.WhenAll(feedbacksTask, locationsTask);
+
+            var feedbacksResult = feedbacksTask.Result;
+            var locationResult = locationsTask.Result;
+
+            List<UserFeedback> feedbacks = feedbacksResult.Where(f => f.IdUser == id)
+                .Join(locationResult, f => f.IdLocation, l => l.Id, (feedback, location) 
+                => new UserFeedback(
+                    location.Title,
+                    location.PageName, 
+                    feedback.Text,
+                    feedback.Ball
+                )).ToList();
             return feedbacks;
         }
 
