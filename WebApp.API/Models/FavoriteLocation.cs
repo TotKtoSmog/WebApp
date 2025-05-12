@@ -2,8 +2,8 @@
 {
     public class FavoriteLocation
     {
-        int Id { get; set; }
-        int IdLocation { get; set; }
-        int IdUser { get; set; }
+        public int Id { get; set; }
+        public int IdLocation { get; set; }
+        public int IdUser { get; set; }
     }
 }
