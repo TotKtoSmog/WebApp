@@ -36,6 +36,8 @@ namespace WebApp.API
             builder.Services.AddDbContextFactory<FeedbackViewContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<UserContext>(o => o.UseNpgsql(connectionString));
             builder.Services.AddDbContextFactory<LocationContext>(o => o.UseNpgsql(connectionString));
+            builder.Services.AddDbContextFactory<FavoriteLocationContext>(o => o.UseNpgsql(connectionString));
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
