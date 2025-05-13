@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace WebApp.Platform.ClientAPI
 {

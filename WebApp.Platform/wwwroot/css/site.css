@@ -92,7 +92,16 @@ main {
 body {
     margin-bottom: 60px;
 }
+.favorite-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
 
+.favorite-icon:hover {
+    transform: scale(1.2);
+}
 .cat {
     white-space: pre;
     margin-right: 5px;
@@ -217,7 +226,7 @@ body {
     overflow: hidden;
 }
 
-.img-container img {
+.img-container img:not(.favorite-icon) {
     width: 100%;
     height: auto;
 }
