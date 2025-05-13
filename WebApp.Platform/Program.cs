@@ -38,6 +38,7 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient<LocationHttpClient>(ConfigureHttpClient);
             builder.Services.AddHttpClient<LocationViewHttpClient>(ConfigureHttpClient);
             builder.Services.AddHttpClient<UserHttpClient>(ConfigureHttpClient);
+            builder.Services.AddHttpClient<FavoriteLocationHttpClient>(ConfigureHttpClient);
             void ConfigureHttpClient(IServiceProvider sp, HttpClient client)
             {
                 var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
@@ -85,6 +86,7 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient<FeedbackHttpClient>();
             builder.Services.AddHttpClient<UserHttpClient>();
             builder.Services.AddHttpClient<LocationHttpClient>();
+            builder.Services.AddHttpClient<FavoriteLocationHttpClient>();
 
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<ICityService, CityService>();
