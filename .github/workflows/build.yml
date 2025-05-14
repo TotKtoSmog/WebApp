@@ -37,5 +37,11 @@ jobs:
     - name: Clean publish folder
       run: rm -rf ./publish
       
-    - name: Publish WebApp.API
-      run: dotnet publish WebApp.API/WebApp.API.csproj --configuration Release --output ./publish/api --no-build
+    - name: Publish WebApp.Platform
+      run: dotnet publish WebApp.Platform/WebApp.Platform.csproj -c Release -o ./publish/platform
+      
+    - name: Upload Platform artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp-platform
+        path: ./publish/platform
