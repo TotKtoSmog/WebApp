@@ -19,20 +19,25 @@ namespace WebApp.Platform.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string pageName)
         {
-            AllLocationInformation locationInformation = await _locationService.GetAllLocationInformationAsync(pageName);
-            
-            if(locationInformation == null) 
+            var token = Request.Cookies["jwt_token"];
+            var name = _locationService.GetUserFirstAndLastName(token ?? "");
+            AllLocationInformation locationInformation = await _locationService.GetAllLocationInformationAsync(pageName, token ?? "");
+
+            if (locationInformation == null)
                 return NotFound();
-            if (User.Identity.IsAuthenticated)
-            {
-                var token = Request.Cookies["jwt_token"];
-                var name = _locationService.GetUserFirstAndLastName(token ?? "");
-                if (!string.IsNullOrEmpty(name))
-                    ViewData["FIO"] = name;
-            }
+
+            if (!string.IsNullOrEmpty(name))
+                ViewData["FIO"] = name;
+
             return View(locationInformation);
         }
-
+        [HttpPost]
+        public async Task<IActionResult> ChangeFavoriteLocation(string pageName)
+        {
+            var token = Request.Cookies["jwt_token"];
+            await _locationService.ChangeFavoriteLocation(pageName, token);
+            return RedirectToAction("Index", new { pageName });
+        }
         [HttpPost]
         public async Task<IActionResult> AddReview(string pageName, Feedback model)
         {
