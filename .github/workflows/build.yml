@@ -39,18 +39,3 @@ jobs:
       
     - name: Publish WebApp.API
       run: dotnet publish WebApp.API/WebApp.API.csproj --configuration Release --output ./publish/api --no-build
-
-    - name: Publish WebApp.Platform
-      run: dotnet publish WebApp.Platform/WebApp.Platform.csproj --configuration Release --output ./publish/platform --no-build
-
-    - name: Upload API artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapp-api
-        path: ./publish/api
-
-    - name: Upload Platform artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapp-platform
-        path: ./publish/platform
