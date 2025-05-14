@@ -1,0 +1,27 @@
+﻿using Microsoft.EntityFrameworkCore;
+using WebApp.API.Models;
+
+namespace WebApp.API.Contexts
+{
+    public class UserFollowerContext : DbContext
+    {
+        public UserFollowerContext(DbContextOptions<UserFollowerContext> options)
+            : base(options)
+        {
+        }
+        private UserFollowerContext() => Database.EnsureCreated();
+
+        public DbSet<UserFollower> Followers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<City>(entity =>
+            {
+                entity.ToTable("user_follower");
+                entity.Property("Id").HasColumnName("id");
+                entity.Property("IdUser").HasColumnName("id_user");
+                entity.Property("IdFollower").HasColumnName("id_follower");
+            });
+        }
+    }
+}

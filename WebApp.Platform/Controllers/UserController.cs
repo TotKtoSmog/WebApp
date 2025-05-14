@@ -24,8 +24,8 @@ namespace WebApp.Platform.Controllers
         {
             var token = Request.Cookies["jwt_token"];
             var user = await _userService.GetUserByTokenAsync(token ?? "");
-            var fb = await _userService.GetUserFeedback(user.Id);
-            var fl = await _userService.GetFavoriteLocations(user.Id);
+            var fb = await _userService.GetUserFeedbackAsync(user.Id);
+            var fl = await _userService.GetFavoriteLocationsAsync(user.Id);
             AllUserInformation userInformation = new AllUserInformation(user, fb, fl);
             return View(userInformation);
         }
