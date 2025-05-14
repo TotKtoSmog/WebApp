@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using WebApp.API.Models;
+﻿using WebApp.API.Models;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
@@ -11,12 +10,13 @@ namespace WebApp.Platform.Services
         private readonly UserHttpClient _userHttpClient;
         private readonly FeedbackHttpClient _feedbackHttpClient;
         private readonly LocationHttpClient _locationHttpClient;
+        private readonly FavoriteLocationHttpClient _favoriteLocationHttpClient;
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService, 
             IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
-            LocationHttpClient locationHttpClient)
+            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
@@ -24,6 +24,7 @@ namespace WebApp.Platform.Services
             _jwtTokenService = jwtTokenService;
             _feedbackHttpClient = feedbackHttpClient;
             _locationHttpClient = locationHttpClient;
+            _favoriteLocationHttpClient = favoriteLocationHttpClient;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -53,6 +54,16 @@ namespace WebApp.Platform.Services
             return await _userHttpClient.CreateUserAsync(newUser);
         }
 
+        public async Task<List<FavoriteLocationItem>> GetFavoriteLocationsAsync(int id)
+        {
+            var rFL = await _favoriteLocationHttpClient.GetByUserIdAsync(id);
+            var rL = await _locationHttpClient.GetAllAsync();
+            var result = rFL.Join(rL, f => f.IdLocation, l => l.Id, (favorite, location)
+                => new FavoriteLocationItem(favorite.Id, location.Id, location.PageName, location.Title));
+                
+            return result.ToList();
+        }
+
         public async Task<User?> GetUserByEmailAsync(string email)
             => await _userHttpClient.GetUserByEmailAsync(email);
 
@@ -64,7 +75,7 @@ namespace WebApp.Platform.Services
             return null;
         }
 
-        public async Task<List<UserFeedback>> GetUserFeedback(int id)
+        public async Task<List<UserFeedback>> GetUserFeedbackAsync(int id)
         {
             var feedbacksTask = _feedbackHttpClient.GetAllAsync();
             var locationsTask = _locationHttpClient.GetAllAsync();

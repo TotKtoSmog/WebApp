@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using WebApp.API.Models;
+﻿using WebApp.API.Models;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
