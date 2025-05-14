@@ -15,7 +15,7 @@ namespace WebApp.API.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<City>(entity =>
+            modelBuilder.Entity<UserFollower>(entity =>
             {
                 entity.ToTable("user_follower");
                 entity.Property("Id").HasColumnName("id");
