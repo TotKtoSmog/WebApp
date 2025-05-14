@@ -11,21 +11,20 @@ on:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_NOLOGO: true
-  
+
   Jwt__Key: ${{ secrets.JWT_KEY }}
   Jwt__Issuer: ${{ secrets.JWT_ISSUER }}
   Jwt__Audience: ${{ secrets.JWT_AUDIENCE }}
-      
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
@@ -33,10 +32,25 @@ jobs:
       run: dotnet restore WebApp.Platform.sln
 
     - name: Build solution
-      run: dotnet build WebApp.Platform.sln --no-restore --configuration Release
+      run: dotnet build WebApp.Platform.sln --configuration Release --no-restore
 
+    - name: Clean publish folder
+      run: rm -rf ./publish
+      
     - name: Publish WebApp.API
-      run: dotnet publish WebApp.API/WebApp.API.csproj -c Release -o ./publish/api
+      run: dotnet publish WebApp.API/WebApp.API.csproj --configuration Release --output ./publish/api --no-build
 
     - name: Publish WebApp.Platform
-      run: dotnet publish WebApp.Platform/WebApp.Platform.csproj -c Release -o ./publish/platform
+      run: dotnet publish WebApp.Platform/WebApp.Platform.csproj --configuration Release --output ./publish/platform --no-build
+
+    - name: Upload API artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp-api
+        path: ./publish/api
+
+    - name: Upload Platform artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp-platform
+        path: ./publish/platform
