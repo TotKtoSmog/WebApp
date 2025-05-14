@@ -18,17 +18,31 @@ namespace WebApp.Platform
             var builder = WebApplication.CreateBuilder(args);
 
             var env = builder.Environment;
+
+            builder.Configuration
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
             if (env.IsDevelopment())
             {
                 builder.Configuration.AddUserSecrets<Program>();
             }
 
+            var jwtSettings = builder.Configuration
+                .GetSection("JwtSettings")
+                .Get<JwtSettings>();
+
+            if (string.IsNullOrWhiteSpace(jwtSettings?.Key))
+                throw new Exception("JWT ключ не удалось получить");
+
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
             builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
             builder.Services.AddControllersWithViews();
-
             builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddHttpClient<CityHttpClient>(ConfigureHttpClient);
             builder.Services.AddHttpClient<CityViewHttpClient>(ConfigureHttpClient);
             builder.Services.AddHttpClient<FeedbackHttpClient>(ConfigureHttpClient);
@@ -38,6 +52,7 @@ namespace WebApp.Platform
             builder.Services.AddHttpClient<LocationViewHttpClient>(ConfigureHttpClient);
             builder.Services.AddHttpClient<UserHttpClient>(ConfigureHttpClient);
             builder.Services.AddHttpClient<FavoriteLocationHttpClient>(ConfigureHttpClient);
+
             void ConfigureHttpClient(IServiceProvider sp, HttpClient client)
             {
                 var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
@@ -50,8 +65,6 @@ namespace WebApp.Platform
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                var jwtSettings = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<JwtSettings>>().Value;
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -76,17 +89,6 @@ namespace WebApp.Platform
                 };
             });
 
-            builder.Services.AddHttpClient();
-            builder.Services.AddHttpClient<CityHttpClient>();
-            builder.Services.AddHttpClient<CityViewHttpClient>();
-            builder.Services.AddHttpClient<LocationViewHttpClient>();
-            builder.Services.AddHttpClient<LocationGalleryHttpClient>();
-            builder.Services.AddHttpClient<FeedbackViewHttpClient>();
-            builder.Services.AddHttpClient<FeedbackHttpClient>();
-            builder.Services.AddHttpClient<UserHttpClient>();
-            builder.Services.AddHttpClient<LocationHttpClient>();
-            builder.Services.AddHttpClient<FavoriteLocationHttpClient>();
-
             builder.Services.AddScoped<IHomeService, HomeService>();
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
@@ -103,7 +105,6 @@ namespace WebApp.Platform
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
