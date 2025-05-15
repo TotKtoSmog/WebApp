@@ -7,6 +7,7 @@ namespace WebApp.API.Repositories.Interface
         public Task<UserFollower?> GetAsync(int id);
         public Task<List<UserFollower>> GetAllAsync();
         public Task<List<UserFollower>> GetByUserIdAsync(int idUser);
+        public Task<List<UserFollower>> GetByFollowerIdAsync(int idFollower);
         public Task<UserFollower> CreateAsync(UserFollower userFollower);
         public Task DeleteAsync(int id);
     }
