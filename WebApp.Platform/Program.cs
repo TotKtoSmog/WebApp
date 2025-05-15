@@ -103,6 +103,7 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IAdminUserService, AdminUserService>();
             builder.Services.AddScoped<INotificationService, TempDataNotificationService>();
             builder.Services.AddScoped<IFavoriteLocationService, FavoriteLocationService>();
+            builder.Services.AddScoped<IUserFollowerService, UserFollowerService>();
 
             var app = builder.Build();
 
