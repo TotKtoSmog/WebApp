@@ -7,14 +7,16 @@ namespace WebApp.Platform.Models
         public User User;
         public List<UserFeedback> Feedbacks;
         public List<FavoriteLocationItem> FavoriteLocations;
-        public List<Follower> Subscriptions;
+        public List<Follower> Subscriptions; 
+        public List<Follower> Followers;
         public AllUserInformation(User user, List<UserFeedback> feedbacks, 
-            List<FavoriteLocationItem> favoriteLocations, List<Follower> subscriptions)
+            List<FavoriteLocationItem> favoriteLocations, List<Follower> subscriptions, List<Follower> followers)
         {
             User = user;
             Feedbacks = feedbacks;
             FavoriteLocations = favoriteLocations;
             Subscriptions = subscriptions;
+            Followers = followers;
         }
     }
 }

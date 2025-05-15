@@ -115,17 +115,17 @@ namespace WebApp.Platform.Services
         public async Task UpdateUserAsync(User user)
             => await _userHttpClient.UpdateUserAsync(user);
 
-        public async Task<List<Follower>> GetUserFollowerAsync(int id)
+        public async Task<List<Follower>> GetUserSubscriptionsAsync(int id)
         {
             var userTask = GetAllAsync();
-            var followerTask = _userFollowerService.GetByUserIdAsync(id);
+            var subscriptionTask = _userFollowerService.GetByUserIdAsync(id);
 
-            await Task.WhenAll(userTask, followerTask);
+            await Task.WhenAll(userTask, subscriptionTask);
 
             var userResult = userTask.Result;
-            var followerResult = followerTask.Result;
+            var subscriptionResult = subscriptionTask.Result;
 
-            var result = followerResult.Join(userResult, f => f.IdFollower, u => u.Id, (follower, user)
+            var result = subscriptionResult.Join(userResult, f => f.IdFollower, u => u.Id, (follower, user)
                 => new Follower(
                     follower.Id, 
                     user.Id, 
@@ -139,6 +139,27 @@ namespace WebApp.Platform.Services
         public async Task<User?> GetAsync(int id)
         {
             return await _userHttpClient.GetUserAsync(id);
+        }
+
+        public async Task<List<Follower>> GetUserFollowersAsync(int id)
+        {
+            var userTask = GetAllAsync();
+            var followerTask = _userFollowerService.GetByFollowerIdAsync(id);
+
+            await Task.WhenAll(userTask, followerTask);
+
+            var userResult = userTask.Result;
+            var followerResult = followerTask.Result;
+
+            var result = followerResult.Join(userResult, f => f.IdFollower, u => u.Id, (follower, user)
+                => new Follower(
+                    follower.Id,
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.AvatarLink)
+                ).ToList();
+            return result;
         }
     }
 }
