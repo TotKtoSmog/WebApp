@@ -1,5 +1,4 @@
-﻿
-using WebApp.Platform.Areas.Admin.Models;
+﻿using WebApp.Platform.Areas.Admin.Models;
 using WebApp.Platform.Areas.Admin.Services.Interfaces;
 using WebApp.Platform.ClientAPI;
 

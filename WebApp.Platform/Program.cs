@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using WebApp.API.Models;
 using WebApp.Platform.Areas.Admin.Services;
 using WebApp.Platform.Areas.Admin.Services.Interfaces;
 using WebApp.Platform.ClientAPI;

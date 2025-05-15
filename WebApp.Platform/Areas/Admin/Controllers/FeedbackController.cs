@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Npgsql;
 using WebApp.API.Models;
 using WebApp.Platform.Areas.Admin.Services.Interfaces;
 
