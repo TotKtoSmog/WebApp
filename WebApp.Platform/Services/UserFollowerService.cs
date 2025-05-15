@@ -28,6 +28,12 @@ namespace WebApp.Platform.Services
             return await _httpClient.GetAsync(id);
         }
 
+        public async Task<List<UserFollower>> GetByFollowerIdAsync(int id)
+        {
+            var result = await _httpClient.GetByFollowerIdAsync(id);
+            return result.ToList();
+        }
+
         public async Task<List<UserFollower>> GetByUserIdAsync(int id)
         {
             var result = await _httpClient.GetByUserIdAsync(id);
