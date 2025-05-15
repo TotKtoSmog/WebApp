@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.API.Models;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 
@@ -34,6 +35,27 @@ namespace WebApp.Platform.Controllers
             var favoriteLocations = favoriteLocationsTask.Result;
             var follower = followerTask.Result;
 
+            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, follower);
+            
+            return View(userInformation);
+        }
+        [Authorize]
+        [HttpGet("[controller]/profile/{id}")]
+        [HttpGet("[controller]/index/{id}")]
+        public async Task<IActionResult> Index(int id)
+        {
+            var userTask = _userService.GetAsync(id);
+            var feedbackTask = _userService.GetUserFeedbackAsync(id);
+            var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(id);
+            var followerTask = _userService.GetUserFollowerAsync(id);
+
+            await Task.WhenAll(userTask, feedbackTask, favoriteLocationsTask, followerTask);
+
+            var user = userTask.Result;
+            var feedback = feedbackTask.Result;
+            var favoriteLocations = favoriteLocationsTask.Result;
+            var follower = followerTask.Result;
+            if(user == null) return NotFound();
             AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, follower);
             return View(userInformation);
         }
