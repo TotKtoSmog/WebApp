@@ -29,6 +29,13 @@ namespace WebApp.Platform.Services
             var result = await _locationHttpClient.GetLocationByCityIdAsync(cityId);
             return result.ToList();
         }
+
+        public async Task<List<Location>> GetVisibleLocationAsync()
+        {
+            var result = await _locationHttpClient.GetVisibleAsync();
+            return result.ToList();
+        }
+
         public async Task<List<Location>> GetVisibleLocationAsync(int cityId)
         {
             var result = await _locationHttpClient.GetVisibleLocationByCityIdAsync(cityId);

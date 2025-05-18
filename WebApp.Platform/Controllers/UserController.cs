@@ -29,15 +29,19 @@ namespace WebApp.Platform.Controllers
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(user.Id);
             var subscriptionsTask = _userService.GetUserSubscriptionsAsync(user.Id);
             var followersTask = _userService.GetUserFollowersAsync(user.Id);
+            var recommendationsTask = _userService.GetUserRecommendation();
 
-            await Task.WhenAll(feedbackTask, favoriteLocationsTask, subscriptionsTask, followersTask);
+            await Task.WhenAll(feedbackTask, favoriteLocationsTask, subscriptionsTask, followersTask, recommendationsTask);
 
             var feedback = feedbackTask.Result;
             var favoriteLocations = favoriteLocationsTask.Result;
             var subscriptions = subscriptionsTask.Result;
             var followers = followersTask.Result;
+            var recommendations = recommendationsTask.Result;
 
-            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, subscriptions, followers);
+            AllUserInformation userInformation = 
+                new AllUserInformation(user, feedback, favoriteLocations, 
+                subscriptions, followers, recommendations);
             
             return View(userInformation);
         }

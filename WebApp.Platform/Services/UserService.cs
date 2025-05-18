@@ -15,10 +15,12 @@ namespace WebApp.Platform.Services
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IUserFollowerService _userFollowerService;
+        private readonly IRecommendationService _recommendationService;
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService, 
             IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
             LocationHttpClient locationHttpClient, 
-            FavoriteLocationHttpClient favoriteLocationHttpClient, IUserFollowerService userFollowerService)
+            FavoriteLocationHttpClient favoriteLocationHttpClient, IUserFollowerService userFollowerService,
+            IRecommendationService recommendationService)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
@@ -28,6 +30,7 @@ namespace WebApp.Platform.Services
             _locationHttpClient = locationHttpClient;
             _favoriteLocationHttpClient = favoriteLocationHttpClient;
             _userFollowerService = userFollowerService;
+            _recommendationService = recommendationService;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -161,5 +164,8 @@ namespace WebApp.Platform.Services
                 ).ToList();
             return result;
         }
+
+        public async Task<List<RecommendedItem>> GetUserRecommendation()
+            => await _recommendationService.GetRecommendedAsync();
     }
 }
