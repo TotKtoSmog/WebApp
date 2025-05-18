@@ -20,10 +20,11 @@ namespace WebApp.Platform.Services
             var result = location.ToList().OrderByDescending(l => l.Rating).
                 Take(MaxCountLocation).Select(l => new RecommendedItem(
                  l.Id,
-                 l.PictureInCityLink,
-                 l.PageName,
                  l.Title,
-                 l.Rating))
+                 l.PageName,
+                 l.PictureInCityLink,
+                 l.Rating
+                 ))
                 .ToList();
 
             return result ?? [];
