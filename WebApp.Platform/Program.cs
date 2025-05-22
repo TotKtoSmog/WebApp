@@ -105,7 +105,7 @@ namespace WebApp.Platform
             builder.Services.AddScoped<IFavoriteLocationService, FavoriteLocationService>();
             builder.Services.AddScoped<IUserFollowerService, UserFollowerService>();
             builder.Services.AddScoped<IRecommendationService, RecommendationService>();
-
+            builder.Services.AddScoped<IFeedBackUser, FeedBackService>();
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
