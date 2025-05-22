@@ -5,8 +5,9 @@ using WebApp.Platform.Services.Interfaces;
 
 namespace WebApp.Platform.Services
 {
-    public class LocationService : ILocationService
+    public class LocationService : ILocationService, ILocationByUser
     {
+        private readonly LocationHttpClient _locationHttpClient;
         private readonly LocationViewHttpClient _locationViewHttpClient;
         private readonly LocationGalleryHttpClient _locationGalleryHttpClient;
         private readonly FeedbackViewHttpClient _feedbackViewHttpClient;
@@ -15,6 +16,7 @@ namespace WebApp.Platform.Services
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IFavoriteLocationService _favoriteLocationService;
         public LocationService(LocationViewHttpClient locationViewHttpClient, 
+            LocationHttpClient locationHttpClient, 
             LocationGalleryHttpClient locationGalleryHttpClient,
             FeedbackViewHttpClient feedbackViewHttpClient,
             FeedbackHttpClient feedbackHttpClient,
@@ -22,6 +24,7 @@ namespace WebApp.Platform.Services
             IFavoriteLocationService favoriteLocationService)
         {
             _locationViewHttpClient = locationViewHttpClient;
+            _locationHttpClient = locationHttpClient;
             _locationGalleryHttpClient = locationGalleryHttpClient;
             _feedbackViewHttpClient = feedbackViewHttpClient;
             _feedbackHttpClient = feedbackHttpClient;
@@ -64,6 +67,12 @@ namespace WebApp.Platform.Services
                     feedback.IdUser = userId;
             }
             return await CreateFeedbackAsync(feedback);
+        }
+
+        public async Task<List<Location>> GetAllAsync()
+        {
+            var location = await _locationHttpClient.GetVisibleAsync();
+            return location.ToList();
         }
 
         public async Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName, string token)
