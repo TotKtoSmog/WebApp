@@ -9,7 +9,7 @@ namespace WebApp.Platform.Services
     {
         private readonly UserHttpClient _userHttpClient;
         private readonly IFeedBackUser _feedBackUser;
-        private readonly LocationHttpClient _locationHttpClient;
+        private readonly ILocationByUser _location;
         private readonly FavoriteLocationHttpClient _favoriteLocationHttpClient;
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
@@ -17,8 +17,8 @@ namespace WebApp.Platform.Services
         private readonly IUserFollowerService _userFollowerService;
         private readonly IRecommendationService _recommendationService;
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService, 
-            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IFeedBackUser feedBackUser, 
-            LocationHttpClient locationHttpClient, 
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IFeedBackUser feedBackUser,
+            ILocationByUser location, 
             FavoriteLocationHttpClient favoriteLocationHttpClient, IUserFollowerService userFollowerService,
             IRecommendationService recommendationService)
         {
@@ -27,7 +27,7 @@ namespace WebApp.Platform.Services
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
             _feedBackUser = feedBackUser;
-            _locationHttpClient = locationHttpClient;
+            _location = location;
             _favoriteLocationHttpClient = favoriteLocationHttpClient;
             _userFollowerService = userFollowerService;
             _recommendationService = recommendationService;
@@ -63,7 +63,7 @@ namespace WebApp.Platform.Services
         public async Task<List<FavoriteLocationItem>> GetFavoriteLocationsAsync(int id)
         {
             var rFL = await _favoriteLocationHttpClient.GetByUserIdAsync(id);
-            var rL = await _locationHttpClient.GetAllAsync();
+            var rL = await _location.GetAllAsync();
             var result = rFL.Join(rL, f => f.IdLocation, l => l.Id, (favorite, location)
                 => new FavoriteLocationItem(favorite.Id, location.Id, location.PageName, location.Title));
                 
@@ -84,7 +84,7 @@ namespace WebApp.Platform.Services
         public async Task<List<UserFeedback>> GetUserFeedbackAsync(int id)
         {
             var feedbacksTask = _feedBackUser.GetFeedbackByUserId(id);
-            var locationsTask = _locationHttpClient.GetAllAsync();
+            var locationsTask = _location.GetAllAsync();
 
             await Task.WhenAll(feedbacksTask, locationsTask);
 
