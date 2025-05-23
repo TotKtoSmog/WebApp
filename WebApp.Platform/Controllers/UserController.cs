@@ -29,7 +29,7 @@ namespace WebApp.Platform.Controllers
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(user.Id);
             var subscriptionsTask = _userService.GetUserSubscriptionsAsync(user.Id);
             var followersTask = _userService.GetUserFollowersAsync(user.Id);
-            var recommendationsTask = _userService.GetUserRecommendation();
+            var recommendationsTask = _userService.GetUserRecommendation(user.Id);
 
             await Task.WhenAll(feedbackTask, favoriteLocationsTask, subscriptionsTask, followersTask, recommendationsTask);
 

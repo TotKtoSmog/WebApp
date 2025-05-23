@@ -21,7 +21,11 @@ namespace WebApp.Platform.Services
             List<Location> locations = await GetVisibleLocationAsync(city.Id);
             return new AllCityInformation(city, locations);
         }
-        public async Task<City> GetCityByPageNameAsync(string pageName)
+
+        public async Task<City?> GetAsync(int id)
+            => await _cityHttpClient.GetCityAsync(id) ?? null;
+
+        public async Task<City?> GetCityByPageNameAsync(string pageName)
             => await _cityHttpClient.GetCityByPageNameAsync(pageName);
 
         public async Task<List<Location>> GetLocationByCityIdAsync(int cityId)

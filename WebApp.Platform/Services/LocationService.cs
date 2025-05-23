@@ -93,6 +93,9 @@ namespace WebApp.Platform.Services
             return new AllLocationInformation(location, gallery, feedbacks, IsFavorite);
         }
 
+        public async Task<Location?> GetAsync(int idLocation)
+            => await _locationHttpClient.GetAsync(idLocation);
+
         public async Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation)
         {
             var result = await _feedbackViewHttpClient.GetFeedbackByIdLocationAsync(idLocation, true);

@@ -1,4 +1,5 @@
-﻿using WebApp.API.Models;
+﻿using System.Linq;
+using WebApp.API.Models;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
@@ -165,7 +166,20 @@ namespace WebApp.Platform.Services
             return result;
         }
 
-        public async Task<List<RecommendedItem>> GetUserRecommendation()
-            => await _recommendationService.GetRecommendedAsync();
+        public async Task<List<RecommendedItem>> GetUserRecommendation(int id)
+        {
+            List<Feedback> location = await _feedBackUser.GetFeedbackByUserId(id);
+            List<int> res = location.DistinctBy(l => l.IdLocation).Select(s => s.IdLocation).ToList();
+
+            List<int> idCites = new List<int>();
+            foreach(var item in res)
+            {
+                var loc = await _location.GetAsync(item);
+                if (loc != null && loc.PageVisible)
+                    idCites.Add(loc.IdCity);
+            }
+
+            return await _recommendationService.GetRecommendedAsync(idCites);
+        }
     }
 }
