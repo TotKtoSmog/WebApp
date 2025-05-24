@@ -175,11 +175,11 @@ namespace WebApp.Platform.Services
             foreach(var item in res)
             {
                 var loc = await _location.GetAsync(item);
-                if (loc != null && loc.PageVisible)
+                if (loc != null && loc.PageVisible && !idCites.Contains(loc.IdCity))
                     idCites.Add(loc.IdCity);
             }
 
-            return await _recommendationService.GetRecommendedAsync(idCites);
+            return await _recommendationService.GetRecommendedAsync(new RecommendationModel(id, idCites));
         }
     }
 }

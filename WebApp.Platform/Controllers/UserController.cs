@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.API.Models;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 
