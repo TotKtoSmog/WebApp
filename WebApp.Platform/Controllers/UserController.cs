@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.API.Models;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 
@@ -9,11 +10,14 @@ namespace WebApp.Platform.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
+        private readonly IUserSearch _search;
         public UserController(ILogger<UserController> logger, 
-            IUserService userService)
+            IUserService userService,
+            IUserSearch search)
         {
             _logger = logger;
             _userService = userService;
+            _search = search;
         }
 
         [Authorize]
@@ -123,6 +127,12 @@ namespace WebApp.Platform.Controllers
         {
             Response.Cookies.Delete("jwt_token");
             return RedirectToAction("Authorization");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            List<User> users = await _search.GetAllAsync();
+            return View(users);
         }
     }
 }
