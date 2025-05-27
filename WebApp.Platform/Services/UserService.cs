@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using WebApp.API.Models;
+﻿using WebApp.API.Models;
 using WebApp.Platform.ClientAPI;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
 
 namespace WebApp.Platform.Services
 {
-    public class UserService : IUserService
+    public class UserService : IUserService, IUserSearch
     {
         private readonly UserHttpClient _userHttpClient;
         private readonly IFeedBackUser _feedBackUser;
@@ -185,7 +184,7 @@ namespace WebApp.Platform.Services
             List<Feedback> location = await _feedBackUser.GetFeedbackByUserId(id);
             List<int> res = location.DistinctBy(l => l.IdLocation).Select(s => s.IdLocation).ToList();
 
-            List<int> idCites = new List<int>();
+            List<int> idCites = [];
             foreach (var item in res)
             {
                 var loc = await _location.GetAsync(item);
@@ -204,5 +203,11 @@ namespace WebApp.Platform.Services
 
             return result;
         }
+
+        public Task<UserFollower> AddFollowersAsync(UserFollower follower)
+            => _userFollowerService.CreateAsync(follower);
+
+        public Task DeleteFollowersAsync(int id)
+            => _userFollowerService.DeleteAsync(id);
     }
 }
