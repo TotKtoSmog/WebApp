@@ -129,10 +129,10 @@ namespace WebApp.Platform.Controllers
             return RedirectToAction("Authorization");
         }
         [HttpGet]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(string email)
         {
             List<User> users = await _search.GetAllAsync();
-            return View(users);
+            return View(users.Where(user => user.Email.Contains(email ?? "")));
         }
     }
 }
