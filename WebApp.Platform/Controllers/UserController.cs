@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using WebApp.API.Models;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
@@ -131,7 +132,21 @@ namespace WebApp.Platform.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string email)
         {
-            List<User> users = await _search.GetAllAsync();
+            var token = Request.Cookies["jwt_token"];
+            var currentUser = await _userService.GetUserByTokenAsync(token ?? "");
+
+            var usersTask = _search.GetAllAsync();
+            var subscriptionsTask = _userService.GetUserSubscriptionsAsync(currentUser.Id);
+
+            await Task.WhenAll(usersTask, subscriptionsTask);
+
+            var subscriptionIds = subscriptionsTask.Result.Select(f => f.FollowerId).ToHashSet();
+
+            var users = usersTask.Result
+                .Where(u => u.Id != currentUser.Id)
+                .Where(u => !subscriptionIds.Contains(u.Id))
+                .ToList();
+
             return View(users.Where(user => user.Email.Contains(email ?? "")));
         }
     }
