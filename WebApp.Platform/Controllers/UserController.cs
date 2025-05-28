@@ -29,6 +29,7 @@ namespace WebApp.Platform.Controllers
         {
             var token = Request.Cookies["jwt_token"];
             var user = await _userService.GetUserByTokenAsync(token ?? "");
+            
             var feedbackTask = _userService.GetUserFeedbackAsync(user.Id);
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(user.Id);
             var subscriptionsTask = _userService.GetUserSubscriptionsAsync(user.Id);
@@ -48,6 +49,7 @@ namespace WebApp.Platform.Controllers
                 subscriptions, followers, recommendations);
             if (user.UserType)
                 return RedirectToAction("Index", "City", new { area = "Admin" });
+            ViewData["userType"] = "I";
             return View(userInformation);
         }
         [Authorize]
@@ -55,6 +57,14 @@ namespace WebApp.Platform.Controllers
         [HttpGet("[controller]/index/{id}")]
         public async Task<IActionResult> Index(int id)
         {
+            var token = Request.Cookies["jwt_token"];
+            var u = await _userService.GetUserByTokenAsync(token ?? "");
+            var mySubscript = await _userService.GetUserSubscriptionsAsync(u.Id);
+            var mySubscriptId = mySubscript.Select(s => s.FollowerId).ToHashSet();
+            ViewData["userType"] = u.Id == id
+                ? "I" : mySubscriptId.Contains(id)
+                ? "subscribers" : "other";
+
             var userTask = _userService.GetAsync(id);
             var feedbackTask = _userService.GetUserFeedbackAsync(id);
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(id);
