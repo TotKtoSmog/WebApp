@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using WebApp.API.Models;
 using WebApp.Platform.Models;
 using WebApp.Platform.Services.Interfaces;
@@ -166,7 +165,12 @@ namespace WebApp.Platform.Controllers
             var currentUser = await _userService.GetUserByTokenAsync(token ?? "");
 
             await _search.AddFollowersAsync(new UserFollower { Id = 0, IdUser = currentUser.Id, IdFollower = id});
-            return RedirectToAction("Search");
+            
+            var referer = Request.Headers["Referer"].ToString();
+
+            if (!string.IsNullOrEmpty(referer))
+                return Redirect(referer);
+            return RedirectToAction("Index");
         }
     }
 }
